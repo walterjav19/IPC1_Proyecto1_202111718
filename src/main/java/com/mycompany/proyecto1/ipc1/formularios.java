@@ -9,8 +9,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -104,13 +106,7 @@ public class formularios {
       };
       btnabout.addActionListener(escuchador);
         
-        
-        
         principal.setVisible(true);
-        
-        
-        
-        
         
     }
     
@@ -237,7 +233,7 @@ public class formularios {
         admi=new JFrame();
         admi.setSize(1200,540);
         admi.setTitle("ADMIN");
-        admi.getContentPane().setBackground(new Color(82, 74, 109 ));
+        admi.getContentPane().setBackground(new Color(96, 96, 96 ));
         admi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         admi.setResizable(false);
         admi.setLocationRelativeTo(null);
@@ -258,9 +254,9 @@ public class formularios {
          ActionListener escuchador= new ActionListener(){
             
             public void actionPerformed(ActionEvent e) {
-                int opcion=JOptionPane.showConfirmDialog(null, "Esta seguro que quiere Cerrar sesion");
+                int opcion=JOptionPane.showConfirmDialog(null, "Esta seguro que quiere cerrar sesion");
                 if(opcion==0){
-                    fprincipal();
+                    login();
                     admi.dispose();
                 }
             }
@@ -272,6 +268,7 @@ public class formularios {
         JPanel  reportes=new JPanel();
         reportes.setLayout(null);
         reportes.setBackground(new Color(72, 103, 117));
+        reportes.setBorder(BorderFactory.createTitledBorder("                    "));
         reportes.setBounds(700, 100, 400, 90);
         admi.add(reportes);
         
@@ -308,6 +305,7 @@ public class formularios {
         
         JPanel uz= new JPanel();
         uz.setLayout(null);
+        uz.setBorder(BorderFactory.createTitledBorder("                 "));
         uz.setBackground(new Color(72, 103, 117));
         uz.setBounds(250,250,400,200);
         admi.add(uz);
@@ -326,6 +324,17 @@ public class formularios {
         btncrearu.setBounds(60, 40, 90, 30);
         uz.add(btncrearu);
         
+        ActionListener cu= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             cusuarios();
+             admi.dispose();
+          }
+      };
+      btncrearu.addActionListener(cu);
+        
+        
+        
         JButton btnveru = new JButton("Ver");
         btnveru.setBackground(new Color(64,207,255));
         btnveru.setForeground(new Color(255,255,255));
@@ -340,6 +349,16 @@ public class formularios {
         btnmodificaru.setBounds(60, 130, 90, 30);
         uz.add(btnmodificaru);
         
+        ActionListener cri= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             actualizar();
+             admi.dispose();
+          }
+      };
+      btnmodificaru.addActionListener(cri);
+        
+        
         JButton btnelimaru = new JButton("Eliminar");
         btnelimaru.setBackground(new Color(64,207,255));
         btnelimaru.setForeground(new Color(255,255,255));
@@ -347,9 +366,20 @@ public class formularios {
         btnelimaru.setBounds(200, 130, 90, 30);
         uz.add(btnelimaru);
         
+        ActionListener cr= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             eliminar();
+             admi.dispose();
+          }
+      };
+      btnelimaru.addActionListener(cr);
+        
+        
         JPanel bli= new JPanel();
         bli.setBackground(new Color(72, 103, 117));
         bli.setLayout(null);
+        bli.setBorder(BorderFactory.createTitledBorder("                         "));
         bli.setBounds(700,250,400,200);
         admi.add(bli);
         
@@ -396,6 +426,282 @@ public class formularios {
         
     }
         
+    
+    public void cusuarios(){
+      JFrame frame = new JFrame();
+      frame.setSize(400,400);
+      frame.setLayout(null);
+      frame.setResizable(false);
+      frame.setLocationRelativeTo(null);
+      frame.setTitle("CREAR USUARIO");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      JLabel Id= new JLabel();
+      Id.setText("ID");
+      Id.setBounds(30,30,100,30);
+      frame.add(Id);
+      
+      JTextField txtId= new JTextField();
+      txtId.setBounds(135,30,200,30);
+      frame.add(txtId);
+      
+      JLabel nombre = new JLabel("Nombre");
+      nombre.setBounds(30,60,100,30);
+      frame.add(nombre);
+      
+      JTextField txtnombre = new JTextField();
+      txtnombre.setBounds(135,60,200,30);
+      frame.add(txtnombre);
+      
+      JLabel apellido = new JLabel("Apellido");
+      apellido.setBounds(30,90,100,30);
+      frame.add(apellido);
+      
+      JTextField txtapellido = new JTextField();
+      txtapellido.setBounds(135,90,200,30);
+      frame.add(txtapellido);
+      
+      JLabel usuario = new JLabel("Usuario");
+      usuario.setBounds(30,120,100,30);
+      frame.add(usuario);
+      
+      JTextField txtusuario = new JTextField();
+      txtusuario.setBounds(135,120,200,30);
+      frame.add(txtusuario);
+      
+      JLabel rol = new JLabel("Rol");
+      rol.setBounds(30,150,100,30);
+      frame.add(rol);
+      
+      JComboBox box = new JComboBox();
+      box.setBounds(135,150,100,30);
+      box.addItem("Estudiante");
+      box.addItem("Profesor");
+      frame.add(box);
+      
+      JLabel contraseña = new JLabel("Contraseña");
+      contraseña.setBounds(30,180,100,30);
+      frame.add(contraseña);
+      
+      JPasswordField txtcontraseña = new JPasswordField();
+      txtcontraseña.setBounds(135,180,200,30);
+      frame.add(txtcontraseña);
+      
+      JLabel confirmar = new JLabel("Confirmar");
+      confirmar.setBounds(30,210,100,30);
+      frame.add(confirmar);
+      
+      JPasswordField txtconfirmar = new JPasswordField();
+      txtconfirmar.setBounds(135,210,200,30);
+      frame.add(txtconfirmar);
+      
+      JButton btncrear = new JButton("Crear");
+      btncrear.setBounds(30,280,100,30);
+      frame.add(btncrear);
+      
+      ActionListener escuchador= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+              System.out.println("ID: "+txtId.getText());
+              System.out.println("Nombre: "+txtnombre.getText());
+              System.out.println("Apellido: "+txtapellido.getText());
+              System.out.println("Usuario: "+txtusuario.getText());
+              System.out.println("Rol: "+box.getSelectedItem());
+              System.out.println("Contraseña: "+txtcontraseña.getText());
+          }
+      };
+      btncrear.addActionListener(escuchador);
+      
+      
+      JButton btncancelar = new JButton("Cancelar");
+      btncancelar.setBounds(200,280,100,30);
+      frame.add(btncancelar);
+      
+      ActionListener cs= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+              txtId.setText("");
+              txtnombre.setText("");
+              txtapellido.setText("");
+              txtusuario.setText("");
+              txtcontraseña.setText("");
+              txtconfirmar.setText("");
+              admin();
+              frame.dispose();
+              
+          }
+      };
+      btncancelar.addActionListener(cs);
+      frame.setVisible(true);
+
+  }
+    
+ public void eliminar(){
+      JFrame frame2 = new JFrame();
+      frame2.setSize(400,400);
+      frame2.setLayout(null);
+      frame2.setResizable(false);
+      frame2.setLocationRelativeTo(null);
+      frame2.setTitle("ELIMINAR USUARIO");
+      frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame2.setVisible(true);
+      
+        JButton btnbuscar = new JButton("BUSCAR");
+      btnbuscar.setBounds(30,30,100,30);
+      frame2.add(btnbuscar);
+      
+        JTextField txtbuscar = new JTextField();
+      txtbuscar.setBounds(135,30,200,30);
+      frame2.add(txtbuscar);
+      
+        JLabel nombre = new JLabel("Nombre");
+      nombre.setBounds(30,60,100,30);
+      frame2.add(nombre);
+      
+        JTextField txtnombre = new JTextField();
+      txtnombre.setBounds(135,60,200,30);
+      txtnombre.setEnabled(false);
+      frame2.add(txtnombre);
+      
+        JLabel apellido = new JLabel("Apellido");
+      apellido.setBounds(30,90,100,30);
+      frame2.add(apellido);
+      
+      JTextField txtapellido = new JTextField();
+      txtapellido.setBounds(135,90,200,30);
+      txtapellido.setEnabled(false);
+      frame2.add(txtapellido);
+      
+      JLabel usuario = new JLabel("Usuario");
+      usuario.setBounds(30,120,100,30);
+      frame2.add(usuario);
+      
+      JTextField txtusuario = new JTextField();
+      txtusuario.setBounds(135,120,200,30);
+      txtusuario.setEnabled(false);
+      frame2.add(txtusuario);
+      
+      JLabel rol = new JLabel("Rol");
+      rol.setBounds(30,150,100,30);
+      frame2.add(rol);
+      
+      JTextField txtrol = new JTextField();
+      txtrol.setBounds(135,150,200,30);
+      txtrol.setEnabled(false);
+      frame2.add(txtrol);
+      
+      
+      JButton btneliminar = new JButton("Eliminar");
+      btneliminar.setBounds(30,200,100,30);
+      frame2.add(btneliminar);
+      
+      JButton btncancelar = new JButton("Cancelar");
+      btncancelar.setBounds(200,200,100,30);
+      frame2.add(btncancelar);
+      
+      ActionListener cu= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             admin();
+             frame2.dispose();
+          }
+      };
+      btncancelar.addActionListener(cu);
+      
+    }
+ 
+ public void actualizar(){
+      JFrame frame3 = new JFrame();
+      frame3.setSize(400,400);
+      frame3.setLayout(null);
+      frame3.setTitle("MODIFICAR USUARIO");
+      frame3.setResizable(false);
+      frame3.setLocationRelativeTo(null);
+      frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      
+      JButton btnbuscar = new JButton("BUSCAR");
+      btnbuscar.setBounds(30,30,100,30);
+      frame3.add(btnbuscar);
+      
+        JTextField txtbuscar = new JTextField();
+      txtbuscar.setBounds(135,30,200,30);
+      frame3.add(txtbuscar);
+      
+      JLabel nombre = new JLabel("Nombre");
+      nombre.setBounds(30,60,100,30);
+      frame3.add(nombre);
+      
+      JTextField txtnombre = new JTextField();
+      txtnombre.setBounds(135,60,200,30);
+      frame3.add(txtnombre);
+      
+      JLabel apellido = new JLabel("Apellido");
+      apellido.setBounds(30,90,100,30);
+      frame3.add(apellido);
+      
+      JTextField txtapellido = new JTextField();
+      txtapellido.setBounds(135,90,200,30);
+      frame3.add(txtapellido);
+      
+      JLabel usuario = new JLabel("Usuario");
+      usuario.setBounds(30,120,100,30);
+      frame3.add(usuario);
+      
+      JTextField txtusuario = new JTextField();
+      txtusuario.setBounds(135,120,200,30);
+      frame3.add(txtusuario);
+      
+      JLabel rol = new JLabel("Rol");
+      rol.setBounds(30,150,100,30);
+      frame3.add(rol);
+      
+      JComboBox box = new JComboBox();
+      box.setBounds(135,150,100,30);
+      box.addItem("Estudiante");
+      box.addItem("Profesor");
+      frame3.add(box);
+      
+      JLabel contraseña = new JLabel("Contraseña");
+      contraseña.setBounds(30,180,100,30);
+      frame3.add(contraseña);
+      
+      JPasswordField txtcontraseña = new JPasswordField();
+      txtcontraseña.setBounds(135,180,200,30);
+      frame3.add(txtcontraseña);
+      
+      JLabel confirmar = new JLabel("Confirmar");
+      confirmar.setBounds(30,210,100,30);  
+      frame3.add(confirmar);
+      
+      JPasswordField txtconfirmar = new JPasswordField();
+      txtconfirmar.setBounds(135,210,200,30);
+      frame3.add(txtconfirmar);
+      
+      
+      JButton btnactualizar = new JButton("Guardar");
+      btnactualizar.setBounds(30,280,100,30);
+      frame3.add(btnactualizar);
+      
+      JButton btncancelar = new JButton("Cancelar");
+      btncancelar.setBounds(200,280,100,30);
+      frame3.add(btncancelar);
+      frame3.setVisible(true);
+      
+       ActionListener cu= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             admin();
+             frame3.dispose();
+          }
+      };
+      btncancelar.addActionListener(cu);
+      
+    }
+ 
+ 
+ 
+ 
         
     }
     
