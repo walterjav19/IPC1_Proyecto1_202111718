@@ -18,8 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 
 
@@ -32,6 +34,8 @@ public class formularios {
     JButton btnabout,btnlogin,logout;
     ImageIcon logo,banner;    
     
+    //datos usuarios
+
     
     public void fprincipal(){
         
@@ -117,6 +121,7 @@ public class formularios {
 	formularios(){
 		
 		logininfo.put("admin","password");
+                
 		
 	}
 	
@@ -342,6 +347,16 @@ public class formularios {
         btnveru.setBounds(200, 40, 90, 30);
         uz.add(btnveru);
         
+        ActionListener cs= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             mostrar();
+             admi.dispose();
+          }
+      };
+      btnveru.addActionListener(cs);
+        
+        
         JButton btnmodificaru = new JButton("Modificar");
         btnmodificaru.setBackground(new Color(64,207,255));
         btnmodificaru.setForeground(new Color(255,255,255));
@@ -499,16 +514,49 @@ public class formularios {
       btncrear.setBounds(30,280,100,30);
       frame.add(btncrear);
       
+       
       ActionListener escuchador= new ActionListener() {
          
           public void actionPerformed(ActionEvent e) {
-              System.out.println("ID: "+txtId.getText());
-              System.out.println("Nombre: "+txtnombre.getText());
-              System.out.println("Apellido: "+txtapellido.getText());
-              System.out.println("Usuario: "+txtusuario.getText());
-              System.out.println("Rol: "+box.getSelectedItem());
-              System.out.println("Contraseña: "+txtcontraseña.getText());
+              
+              
+            String id = txtId.getText();
+            String nombre = txtnombre.getText();
+            String apellido = txtapellido.getText();
+            String usuario = txtusuario.getText();
+            String rol = (String) box.getSelectedItem();
+            String contraseña = txtcontraseña.getText();
+            String confirmar = txtconfirmar.getText();
+if (id.equals("") || nombre.equals("") || apellido.equals("") || usuario.equals("") || rol.equals("") || contraseña.equals("") || confirmar.equals("")) {
+                JOptionPane.showMessageDialog(null, "Campos vacios", "Error", JOptionPane.WARNING_MESSAGE);
+            }else{
+                String Rol = "2";
+                 if (rol.equals("Profesor")) {
+                    Rol="3";
+                }
+
+    
+    if(contraseña.equals(confirmar)){
+        JOptionPane.showMessageDialog(null, "Usuario creado Correctamente");
+        Usuario usuarioNuevo = new Usuario(id,nombre,apellido,usuario,Rol,contraseña);
+        txtId.setText(null);
+        txtapellido.setText(null);
+        txtnombre.setText(null);
+        txtusuario.setText(null);
+        txtcontraseña.setText(null);
+        txtconfirmar.setText(null);
+        System.out.println(usuarioNuevo);
+         
+        
+    }else{
+       JOptionPane.showMessageDialog(null, "contraseñas no coinciden");
+       txtcontraseña.setText(null);
+       txtconfirmar.setText(null);
+    }
+ 
           }
+          }
+
       };
       btncrear.addActionListener(escuchador);
       
@@ -535,6 +583,8 @@ public class formularios {
       frame.setVisible(true);
 
   }
+
+
     
  public void eliminar(){
       JFrame frame2 = new JFrame();
@@ -610,6 +660,38 @@ public class formularios {
       
     }
  
+ 
+ 
+JTextField txtbuscar,txtnombre,txtapellido,txtusuario;
+JComboBox box;
+JPasswordField txtcontraseña,txtconfirmar;
+
+
+
+public void cargarDatos(String id){
+        String[] datosBusqueda =Usuario.buscarUsuario(id);
+        if (datosBusqueda!= null) {
+            txtbuscar.setText(datosBusqueda[0]);
+            txtbuscar.setEnabled(false);
+
+            txtnombre.setText(datosBusqueda[1]);
+            txtapellido.setText(datosBusqueda[2]);
+            txtusuario.setText(datosBusqueda[3]);
+            box.setEnabled(true);
+            if (datosBusqueda[4].equals("3")) {
+                box.setSelectedIndex(1);
+            }else if(datosBusqueda[4].equals("2")) {
+                box.setSelectedIndex(0);
+            }else{
+                box.setEnabled(false);
+            }
+            txtcontraseña.setText(datosBusqueda[5]);
+            txtconfirmar.setText(datosBusqueda[5]);
+        }else{
+            JOptionPane.showMessageDialog(null, "No existe dato", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
  public void actualizar(){
       JFrame frame3 = new JFrame();
       frame3.setSize(400,400);
@@ -620,11 +702,7 @@ public class formularios {
       frame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       
       
-      JButton btnbuscar = new JButton("BUSCAR");
-      btnbuscar.setBounds(30,30,100,30);
-      frame3.add(btnbuscar);
-      
-        JTextField txtbuscar = new JTextField();
+      txtbuscar = new JTextField();
       txtbuscar.setBounds(135,30,200,30);
       frame3.add(txtbuscar);
       
@@ -632,7 +710,7 @@ public class formularios {
       nombre.setBounds(30,60,100,30);
       frame3.add(nombre);
       
-      JTextField txtnombre = new JTextField();
+      txtnombre = new JTextField();
       txtnombre.setBounds(135,60,200,30);
       frame3.add(txtnombre);
       
@@ -640,7 +718,7 @@ public class formularios {
       apellido.setBounds(30,90,100,30);
       frame3.add(apellido);
       
-      JTextField txtapellido = new JTextField();
+      txtapellido = new JTextField();
       txtapellido.setBounds(135,90,200,30);
       frame3.add(txtapellido);
       
@@ -648,7 +726,7 @@ public class formularios {
       usuario.setBounds(30,120,100,30);
       frame3.add(usuario);
       
-      JTextField txtusuario = new JTextField();
+      txtusuario = new JTextField();
       txtusuario.setBounds(135,120,200,30);
       frame3.add(txtusuario);
       
@@ -656,7 +734,7 @@ public class formularios {
       rol.setBounds(30,150,100,30);
       frame3.add(rol);
       
-      JComboBox box = new JComboBox();
+      box = new JComboBox();
       box.setBounds(135,150,100,30);
       box.addItem("Estudiante");
       box.addItem("Profesor");
@@ -666,7 +744,7 @@ public class formularios {
       contraseña.setBounds(30,180,100,30);
       frame3.add(contraseña);
       
-      JPasswordField txtcontraseña = new JPasswordField();
+      txtcontraseña = new JPasswordField();
       txtcontraseña.setBounds(135,180,200,30);
       frame3.add(txtcontraseña);
       
@@ -674,7 +752,7 @@ public class formularios {
       confirmar.setBounds(30,210,100,30);  
       frame3.add(confirmar);
       
-      JPasswordField txtconfirmar = new JPasswordField();
+      txtconfirmar = new JPasswordField();
       txtconfirmar.setBounds(135,210,200,30);
       frame3.add(txtconfirmar);
       
@@ -682,6 +760,43 @@ public class formularios {
       JButton btnactualizar = new JButton("Guardar");
       btnactualizar.setBounds(30,280,100,30);
       frame3.add(btnactualizar);
+      
+       ActionListener g= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+            String id = txtbuscar.getText();
+            String nombre = txtnombre.getText();
+            String apellido = txtapellido.getText();
+            String usuario = txtusuario.getText();
+            String rol = (String) box.getSelectedItem();
+            String contraseña = txtcontraseña.getText();
+            String confirmar = txtconfirmar.getText();
+            
+            if (id.equals("") || nombre.equals("") || apellido.equals("") || usuario.equals("") || rol.equals("") || contraseña.equals("") || confirmar.equals("")) {
+                JOptionPane.showMessageDialog(null, "Campos vacios", "Error", JOptionPane.WARNING_MESSAGE);
+            }else{
+                String Rol = "2";
+                 if (rol.equals("Profesor")) {
+                    Rol="3";
+                }
+            }
+            
+            
+            if (contraseña.equals(confirmar)) {
+
+                    if (Usuario.actualizarUsuario(id,nombre,apellido,usuario,rol,contraseña)) {
+                        JOptionPane.showMessageDialog(null, "Usuario actualizado");
+                        txtbuscar.setEnabled(true);
+                        
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            
+          }
+      };
+      btnactualizar.addActionListener(g);
+      
       
       JButton btncancelar = new JButton("Cancelar");
       btncancelar.setBounds(200,280,100,30);
@@ -697,7 +812,44 @@ public class formularios {
       };
       btncancelar.addActionListener(cu);
       
+      
+      
+      
+       JButton btnbuscar = new JButton("BUSCAR");
+      btnbuscar.setBounds(30,30,100,30);
+      frame3.add(btnbuscar);
+      
+      ActionListener b= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             if (txtbuscar.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "rellene la Id", "Error", JOptionPane.WARNING_MESSAGE);
+            } else {
+                cargarDatos(txtbuscar.getText());
+            }
+          }
+      };
+      btnbuscar.addActionListener(b);
+      
+      
+      
+      
     }
+ 
+
+ public void mostrar(){
+     JFrame frame4=new JFrame(); 
+     frame4.setLayout(null);
+     frame4.setResizable(false);
+     frame4.setSize(1200,600);
+     
+     
+     
+     
+     frame4.setVisible(true);
+     
+     
+ }
  
  
  
