@@ -584,8 +584,27 @@ if (id.equals("") || nombre.equals("") || apellido.equals("") || usuario.equals(
 
   }
 
-
+JTextField txtbuscare,txtapellidoe,txtnombree,txtrole,txtusuarioe;
     
+
+ public void BuscarEli(String id){
+        String[] datosBusqueda =Usuario.buscarUsuario(id);
+        if (datosBusqueda!= null) {
+            txtbuscare.setText(datosBusqueda[0]);
+            txtnombree.setText(datosBusqueda[1]);
+            txtapellidoe.setText(datosBusqueda[2]);
+            txtusuarioe.setText(datosBusqueda[3]);
+            if (datosBusqueda[4].equals("3")) {
+                txtrole.setText("Profesor");
+            }else if(datosBusqueda[4].equals("2")){
+                txtrole.setText("Estudiante");
+            }
+          
+        }else{
+            JOptionPane.showMessageDialog(null, "Registro inexistente", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
  public void eliminar(){
       JFrame frame2 = new JFrame();
       frame2.setSize(400,400);
@@ -596,54 +615,91 @@ if (id.equals("") || nombre.equals("") || apellido.equals("") || usuario.equals(
       frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame2.setVisible(true);
       
-        JButton btnbuscar = new JButton("BUSCAR");
+      JButton btnbuscar = new JButton("BUSCAR");
       btnbuscar.setBounds(30,30,100,30);
       frame2.add(btnbuscar);
       
-        JTextField txtbuscar = new JTextField();
-      txtbuscar.setBounds(135,30,200,30);
-      frame2.add(txtbuscar);
+      ActionListener bu= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+               if (txtbuscare.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar un ID", "Error", JOptionPane.WARNING_MESSAGE);
+            } else {
+                BuscarEli(txtbuscare.getText());
+            }
+              
+          }
+      };
+      btnbuscar.addActionListener(bu);
+      
+      txtbuscare = new JTextField();
+      txtbuscare.setBounds(135,30,200,30);
+      frame2.add(txtbuscare);
       
         JLabel nombre = new JLabel("Nombre");
       nombre.setBounds(30,60,100,30);
       frame2.add(nombre);
       
-        JTextField txtnombre = new JTextField();
-      txtnombre.setBounds(135,60,200,30);
-      txtnombre.setEnabled(false);
-      frame2.add(txtnombre);
+      txtnombree = new JTextField();
+      txtnombree.setBounds(135,60,200,30);
+      txtnombree.setEnabled(false);
+      frame2.add(txtnombree);
       
         JLabel apellido = new JLabel("Apellido");
       apellido.setBounds(30,90,100,30);
       frame2.add(apellido);
       
-      JTextField txtapellido = new JTextField();
-      txtapellido.setBounds(135,90,200,30);
-      txtapellido.setEnabled(false);
-      frame2.add(txtapellido);
+      txtapellidoe = new JTextField();
+      txtapellidoe.setBounds(135,90,200,30);
+      txtapellidoe.setEnabled(false);
+      frame2.add(txtapellidoe);
       
       JLabel usuario = new JLabel("Usuario");
       usuario.setBounds(30,120,100,30);
       frame2.add(usuario);
       
-      JTextField txtusuario = new JTextField();
-      txtusuario.setBounds(135,120,200,30);
-      txtusuario.setEnabled(false);
-      frame2.add(txtusuario);
+      txtusuarioe = new JTextField();
+      txtusuarioe.setBounds(135,120,200,30);
+      txtusuarioe.setEnabled(false);
+      frame2.add(txtusuarioe);
       
       JLabel rol = new JLabel("Rol");
       rol.setBounds(30,150,100,30);
       frame2.add(rol);
       
-      JTextField txtrol = new JTextField();
-      txtrol.setBounds(135,150,200,30);
-      txtrol.setEnabled(false);
-      frame2.add(txtrol);
+      txtrole = new JTextField();
+      txtrole.setBounds(135,150,200,30);
+      txtrole.setEnabled(false);
+      frame2.add(txtrole);
       
       
       JButton btneliminar = new JButton("Eliminar");
       btneliminar.setBounds(30,200,100,30);
       frame2.add(btneliminar);
+      
+      ActionListener be= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             
+               String id = txtbuscare.getText();
+            if (id.equals("")){
+                JOptionPane.showMessageDialog(null, "Debe buscar la información antes", "Error", JOptionPane.WARNING_MESSAGE);
+            }else{
+                Usuario.eliminarUsuario(id);
+                JOptionPane.showMessageDialog(null, "Usuario Eliminado");
+                txtbuscare.setText(null);
+                txtnombree.setText(null);
+                txtapellidoe.setText(null);
+                txtusuarioe.setText(null);
+                txtrole.setText(null);
+            }
+              
+          }
+      };
+      btneliminar.addActionListener(be);
+      
+      
+      
       
       JButton btncancelar = new JButton("Cancelar");
       btncancelar.setBounds(200,200,100,30);
@@ -823,16 +879,13 @@ public void cargarDatos(String id){
           
           public void actionPerformed(ActionEvent e) {
              if (txtbuscar.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "rellene la Id", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "no hay Id para buscar", "Error", JOptionPane.WARNING_MESSAGE);
             } else {
                 cargarDatos(txtbuscar.getText());
             }
           }
       };
       btnbuscar.addActionListener(b);
-      
-      
-      
       
     }
  
