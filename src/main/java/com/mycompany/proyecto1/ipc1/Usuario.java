@@ -2,12 +2,12 @@
 package com.mycompany.proyecto1.ipc1;
 
 public class Usuario {
-//datos de los usuarios
+
     public static String datos = "";
 
     private final static int NUMERO_CAMPOS=6;
 
-    //propiedades de cada usuario
+    //parametros para el constructor
     private String id;
     private String nombre;
     private String apellido;
@@ -50,8 +50,6 @@ public class Usuario {
                 }
             }
         }
-
-
         return datosFormateados;
     }
 
@@ -108,9 +106,9 @@ public class Usuario {
 
     }
 
-    private static boolean existeUsuario(String id){
+    private static boolean existeUsuario(String id){//verificamos si hay 
 
-        //siempre que tenga datos
+    
         if (datos.length()>0) {
             boolean existe =false;
             for (int i = 0; i < datosUsuario().length; i++) {
@@ -124,30 +122,29 @@ public class Usuario {
         }
     }
 
-    public static String[] login(String nombreUsuario, String contrasena){
+    public static String[] login(String nombre, String contraseña){
         String [] mensaje = new String[4];
 
         for (int i = 0; i < datosUsuario().length; i++) {
-            if (datosUsuario()[i][3].equals(nombreUsuario)) {
-                if (datosUsuario()[i][5].equals(contrasena)) {
+            if (datosUsuario()[i][3].equals(nombre)) {
+                if (datosUsuario()[i][5].equals(contraseña)) {
                     mensaje[0]="1";
-                    mensaje[1]="Bienvenido al sistema " + datosUsuario()[i][3];
+                    mensaje[1]="Bienvenido: " + datosUsuario()[i][3];
                     mensaje[2]=datosUsuario()[i][0];
                     mensaje[3]=datosUsuario()[i][4];
 
                 }else{
                     mensaje[0]="0";
-                    mensaje[1]="Credenciales invalidas para el usuario " + datosUsuario()[i][3];
+                    mensaje[1]="Credenciales inválidas para el usuario, por favor intente nuevamente";
                     mensaje[2]=null;
                     mensaje[3]=null;
 
                 }
                 break;
             }else{
-                //despues de comprobar a todos
                 if (i == datosUsuario().length-1) {
                     mensaje[0]="0";
-                    mensaje[1]="El usuario no existe, por favor pongase en contácto con el administrador del sistema para efectuar el registro";
+                    mensaje[1]="Usuario inexistente, contacte al administrador";
                     mensaje[2]=null;
                     mensaje[3]=null;
 

@@ -18,9 +18,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -116,21 +118,6 @@ public class formularios {
     
     
     
-    HashMap<String,String> logininfo = new HashMap<String,String>();
-	
-	formularios(){
-		
-		logininfo.put("admin","password");
-                
-		
-	}
-	
-	public HashMap getLoginInfo(){
-		return logininfo;
-	}
-    
-  
-    
     
     
     public void login(){
@@ -180,26 +167,30 @@ public class formularios {
                String usu = txtusu.getText();
 	       String password = String.valueOf(txtcon.getPassword());
                
-               if(logininfo.containsKey(usu)) {
-				if(logininfo.get(usu).equals(password)) {
-					
-					JOptionPane.showMessageDialog(null, "Credenciales Validas");
-                                        admin();
-                                        login.dispose();
-				}
-				else {
-					
-	                       JOptionPane.showMessageDialog(null,"Credenciales Invalidas, por favor intente nuevamente");
+               if (usu.equals("") || password.equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingrese su usuario y contraseña", "Error", JOptionPane.ERROR_MESSAGE);
 
-				}
+            } else {
+                String[] respuesta = Usuario.login(usu, password);//arreglo guarda parametros
+                if (respuesta[0].equals("0")) {
+                    JOptionPane.showMessageDialog(null, respuesta[1], "", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    if (respuesta[3].equals("1")) {// frame para el admin
+                        admin();
+                        login.dispose();
+                        JOptionPane.showMessageDialog(null, respuesta[1], "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    if (respuesta[3].equals("3") || respuesta[3].equals("2")) {
+                        login.dispose();
+                        JOptionPane.showMessageDialog(null, respuesta[1], "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
 
-			}
-			else {
-		        JOptionPane.showMessageDialog(null,"El usuario no existe por favor pongase en contacto con el"
-                                + "administrador del sistema para efectuar su registro");
-			}
+                    }
+
+                }
             }
-            
+         
+             
+            }
         };
         btnlogin.addActionListener(c);
         
@@ -412,6 +403,26 @@ public class formularios {
         btncrearb.setBounds(60, 40, 90, 30);
         bli.add(btncrearb);
         
+        
+           ActionListener cb= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             
+             String[] opciones = {"Crear Masiva", "Crear individual"};
+             int x = JOptionPane.showOptionDialog(null, "¿Forma de carga?","Selecciona una opcion",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+             
+             if (x ==0) {
+                cargamasiva();
+                admi.dispose();
+            }else if (x == 1) {
+                //carga individual
+                cargaindividual();
+                admi.dispose();
+            }
+          }
+      };
+      btncrearb.addActionListener(cb);
+        
         JButton btnverb = new JButton("Ver");
         btnverb.setBackground(new Color(64,207,255));
         btnverb.setForeground(new Color(255,255,255));
@@ -425,6 +436,16 @@ public class formularios {
         btnmodificarb.setBorderPainted(false);
         btnmodificarb.setBounds(60, 130, 90, 30);
         bli.add(btnmodificarb);
+        
+        ActionListener btnm= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             actualizarbibliografia();
+             admi.dispose();
+          }
+      };
+      btnmodificarb.addActionListener(btnm);
+        
         
         JButton btnelimarb = new JButton("Eliminar");
         btnelimarb.setBackground(new Color(64,207,255));
@@ -549,8 +570,7 @@ if (id.equals("") || nombre.equals("") || apellido.equals("") || usuario.equals(
          
         
     }else{
-       JOptionPane.showMessageDialog(null, "contraseñas no coinciden");
-       txtcontraseña.setText(null);
+       JOptionPane.showMessageDialog(null, "contraseña de confirmacion no coincide intente de nuevo");
        txtconfirmar.setText(null);
     }
  
@@ -598,8 +618,12 @@ JTextField txtbuscare,txtapellidoe,txtnombree,txtrole,txtusuarioe;
                 txtrole.setText("Profesor");
             }else if(datosBusqueda[4].equals("2")){
                 txtrole.setText("Estudiante");
+            }else{
+                txtrole.setText("Administrador");
             }
           
+            
+            
         }else{
             JOptionPane.showMessageDialog(null, "Registro inexistente", "Error", JOptionPane.WARNING_MESSAGE);
         }
@@ -724,7 +748,7 @@ JPasswordField txtcontraseña,txtconfirmar;
 
 
 
-public void cargarDatos(String id){
+public void BuscarDatos(String id){
         String[] datosBusqueda =Usuario.buscarUsuario(id);
         if (datosBusqueda!= null) {
             txtbuscar.setText(datosBusqueda[0]);
@@ -820,6 +844,7 @@ public void cargarDatos(String id){
        ActionListener g= new ActionListener() {
          
           public void actionPerformed(ActionEvent e) {
+              
             String id = txtbuscar.getText();
             String nombre = txtnombre.getText();
             String apellido = txtapellido.getText();
@@ -835,20 +860,26 @@ public void cargarDatos(String id){
                  if (rol.equals("Profesor")) {
                     Rol="3";
                 }
-            }
+            
             
             
             if (contraseña.equals(confirmar)) {
 
-                    if (Usuario.actualizarUsuario(id,nombre,apellido,usuario,rol,contraseña)) {
+                    if (Usuario.actualizarUsuario(id,nombre,apellido,usuario,Rol,contraseña)) {
                         JOptionPane.showMessageDialog(null, "Usuario actualizado");
                         txtbuscar.setEnabled(true);
-                        
+                        txtnombre.setText(null);
+                        txtapellido.setText(null);
+                        txtusuario.setText(null);
+                        txtcontraseña.setText(null);
+                        txtconfirmar.setText(null);
+                        txtbuscar.setText(null);
                     }
                 }else{
-                    JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden", "Error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Contraseñas distintas", "Error", JOptionPane.WARNING_MESSAGE);
                 }
             
+          }
           }
       };
       btnactualizar.addActionListener(g);
@@ -881,7 +912,7 @@ public void cargarDatos(String id){
              if (txtbuscar.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "no hay Id para buscar", "Error", JOptionPane.WARNING_MESSAGE);
             } else {
-                cargarDatos(txtbuscar.getText());
+                BuscarDatos(txtbuscar.getText());
             }
           }
       };
@@ -891,19 +922,531 @@ public void cargarDatos(String id){
  
 
  public void mostrar(){
-     JFrame frame4=new JFrame(); 
+     JFrame frame4=new JFrame("Mostrar Usuarios"); 
      frame4.setLayout(null);
      frame4.setResizable(false);
      frame4.setSize(1200,600);
+     frame4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     frame4.setLocationRelativeTo(null);
      
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(500,350,100,30);
+     frame4.add(btnRegresar);
      
+      ActionListener REG= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             frame4.dispose();
+             admin();
+          }
+      };
+      btnRegresar.addActionListener(REG);
+     
+     DefaultTableModel mtabla = new DefaultTableModel(); 
+     
+     mtabla.addColumn("Id");
+     mtabla.addColumn("Nombre");
+     mtabla.addColumn("Apellido");
+     mtabla.addColumn("Usuario");
+     mtabla.addColumn("Rol");
+     mtabla.addColumn("Contraseña");
+    
+     
+     JTable tabla1 = new JTable();
+    
+     tabla1.setBorder(new LineBorder(Color.blue));
+     for (String[] dato: Usuario.datosUsuario()) {
+            String tipoRol = "Administrador";
+            if (dato[4].equals("2")) {
+                tipoRol = "Estudiante";
+            }else if (dato[4].equals("3")) {
+                tipoRol = "Profesor";
+            }
+            mtabla.addRow(new Object[]{dato[0],dato[1], dato[2], dato[3],tipoRol,dato[5]});
+        }
+     JScrollPane scroll= new JScrollPane(tabla1);
+     scroll.setBounds(0,0,1200,300);
+     tabla1.setModel(mtabla);
+     frame4.add(scroll);
      
      
      frame4.setVisible(true);
      
      
  }
+
+
  
+   void cargaindividual(){
+        JFrame ci = new JFrame("carga Individual");
+        ci.setSize(800,500);
+        ci.setLocationRelativeTo(null);
+        ci.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ci.setLayout(null);
+      
+      JLabel tipo= new JLabel();
+      tipo.setText("Tipo");
+      tipo.setBounds(30,30,100,30);
+      ci.add(tipo);
+      
+      JComboBox boxt = new JComboBox();
+      boxt.setBounds(135,30,100,30);
+      boxt.addItem("Libro");
+      boxt.addItem("Revista");
+      boxt.addItem("Tesis");
+      ci.add(boxt);
+      
+     
+      
+      JLabel autor = new JLabel("Autor");
+      autor.setBounds(30,60,100,30);
+      ci.add(autor);
+      
+      JTextField txtautor = new JTextField();
+      txtautor.setBounds(135,60,200,30);
+      ci.add(txtautor);
+      
+      JLabel ti = new JLabel("Titulo");
+      ti.setBounds(30,90,100,30);
+      ci.add(ti);
+      
+      JTextField txttitulo = new JTextField();
+      txttitulo.setBounds(135,90,200,30);
+      ci.add(txttitulo);
+      
+      JLabel edi = new JLabel("Edicion");
+      edi.setBounds(30,120,100,30);
+      ci.add(edi);
+      
+      JTextField txtedicion = new JTextField();
+      txtedicion.setBounds(135,120,200,30);
+      ci.add(txtedicion);
+      
+      JLabel des = new JLabel("Descripcion");
+      des.setBounds(30,150,100,30);
+      ci.add(des);
+      
+      JTextField txtdescripcion = new JTextField();
+      txtdescripcion.setBounds(135,150,200,30);
+      ci.add(txtdescripcion);
+      
+      JLabel tem = new JLabel("Temas");
+      tem.setBounds(30,180,100,30);
+      ci.add(tem);
+      
+      JTextField txttemas = new JTextField();
+      txttemas.setBounds(135,180,200,30);
+      ci.add(txttemas);
+      
+      JLabel fr = new JLabel("Frecuencia");
+      fr.setBounds(425,60,100,30);
+      ci.add(fr);
+      
+      JTextField txtfrecuencia = new JTextField();
+      txtfrecuencia.setBounds(500,60,200,30);
+      ci.add(txtfrecuencia);
+      
+      JLabel ej = new JLabel("Ejemplares");
+      ej.setBounds(425,90,100,30);
+      ci.add(ej);
+      
+      JTextField txtejemplares = new JTextField();
+      txtejemplares.setBounds(500,90,200,30);
+      ci.add(txtejemplares);
+      
+      JLabel cop = new JLabel("Copias");
+      cop.setBounds(425,150,100,30);
+      ci.add(cop);
+      
+      JTextField txtcopias = new JTextField();
+      txtcopias.setBounds(500,150,200,30);
+      ci.add(txtcopias);
+      
+      JLabel ar = new JLabel("Area");
+      ar.setBounds(425,120,100,30);
+      ci.add(ar);
+      
+      JTextField txtarea = new JTextField();
+      txtarea.setBounds(500,120,200,30);
+      ci.add(txtarea);
+      
+      JLabel dis = new JLabel("Disponibles");
+      dis.setBounds(425,180,100,30);
+      ci.add(dis);
+      
+      JTextField txtdisponibles = new JTextField();
+      txtdisponibles.setBounds(500,180,200,30);
+      ci.add(txtdisponibles);
+      
+      JButton btncr= new JButton("Crear");
+      btncr.setBounds(225,270,100,30);
+      ci.add(btncr);
+      
+               txtarea.setEnabled(false);
+               txtfrecuencia.setEnabled(false);
+               txtejemplares.setEnabled(false);
+      
+       ActionListener ev= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+           int a = boxt.getSelectedIndex();
+           System.out.println(a);
+           
+           if(a==0){
+               txtautor.setEnabled(true);
+               txttitulo.setEnabled(true);
+               txtedicion.setEnabled(true);
+               txtdescripcion.setEnabled(true);
+               txttemas.setEnabled(true);
+               txtfrecuencia.setEnabled(true);
+               txtcopias.setEnabled(true);
+               txtarea.setEnabled(false);
+               txtfrecuencia.setEnabled(false);
+               txtejemplares.setEnabled(false);
+               
+               
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+           }
+           if(a==1){
+               txtautor.setEnabled(true);
+               txttitulo.setEnabled(true);
+               txtedicion.setEnabled(true);
+               txtdescripcion.setEnabled(true);
+               txttemas.setEnabled(true);
+               txtfrecuencia.setEnabled(true);
+               txtcopias.setEnabled(true);
+               txtarea.setEnabled(false);
+               txtfrecuencia.setEnabled(true);
+               txtejemplares.setEnabled(true);
+               
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+           }if(a==2){
+               txtautor.setEnabled(true);
+               txttitulo.setEnabled(true);
+               txtedicion.setEnabled(true);
+               txtdescripcion.setEnabled(true);
+               txttemas.setEnabled(true);
+               txtfrecuencia.setEnabled(true);
+               txtcopias.setEnabled(true);
+               txtarea.setEnabled(true);
+               txtfrecuencia.setEnabled(false);
+               txtejemplares.setEnabled(false);
+               
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+           }
+          }
+      };
+      boxt.addActionListener(ev);
+      
+   
+      ActionListener btncre= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+           
+            String tipo = String.valueOf(boxt.getSelectedIndex());
+            String autor = txtautor.getText();
+            String titulo = txttitulo.getText();
+            String edicion = txtedicion.getText();
+            String descripcion = txtdescripcion.getText();
+            String temas = txttemas.getText();
+            String frecuencia = txtfrecuencia.getText();
+            String ejemplares = txtejemplares.getText();
+            String area = txtarea.getText();
+            String copias = txtcopias.getText();
+            String disponibles = txtdisponibles.getText();
+              
+            if (titulo.equals("") || disponibles.equals("") ) {
+                JOptionPane.showMessageDialog(null, "rellene los datos requeridos", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+
+                String[] temas1 = temas.split(",");
+                Bibliografia bibliografia = new Bibliografia(tipo, autor, titulo, descripcion,edicion,temas1,frecuencia,ejemplares,area,copias,disponibles);
+
+                if(bibliografia.crearBibliografiaIndividual()){
+                    JOptionPane.showMessageDialog(null, "Bibliografia creada correctamente", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+                System.out.println(bibliografia);//comprobaciones en consola
+                }
+            }
+            
+           
+            
+          }
+      };
+      btncr.addActionListener(btncre);
+      
+      JButton btncan= new JButton("Cancelar");
+      btncan.setBounds(400,270,100,30);
+      ci.add(btncan);
+      
+     
+      
+       ActionListener btnc= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             ci.dispose();
+             admin();
+          }
+      };
+      btncan.addActionListener(btnc);
+      
+      ci.setVisible(true);
+    }
+   
+   
+   void actualizarbibliografia(){
+        JFrame ab = new JFrame("carga Individual");
+        ab.setSize(800,500);
+        ab.setLocationRelativeTo(null);
+        ab.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ab.setLayout(null);
+      
+      JLabel tipo= new JLabel();
+      tipo.setText("Tipo");
+      tipo.setBounds(30,30,100,30);
+      ab.add(tipo);
+      
+      JComboBox boxt = new JComboBox();
+      boxt.setBounds(135,30,100,30);
+      boxt.addItem("Libro");
+      boxt.addItem("Revista");
+      boxt.addItem("Tesis");
+      ab.add(boxt);
+      
+     
+      
+      JLabel autor = new JLabel("Autor");
+      autor.setBounds(30,60,100,30);
+      ab.add(autor);
+      
+      JTextField txtautor = new JTextField();
+      txtautor.setBounds(135,60,200,30);
+      ab.add(txtautor);
+      
+      JLabel ti = new JLabel("Titulo");
+      ti.setBounds(30,90,100,30);
+      ab.add(ti);
+      
+      JTextField txttitulo = new JTextField();
+      txttitulo.setBounds(135,90,200,30);
+      ab.add(txttitulo);
+      
+      JLabel edi = new JLabel("Edicion");
+      edi.setBounds(30,120,100,30);
+      ab.add(edi);
+      
+      JTextField txtedicion = new JTextField();
+      txtedicion.setBounds(135,120,200,30);
+      ab.add(txtedicion);
+      
+      JLabel des = new JLabel("Descripcion");
+      des.setBounds(30,150,100,30);
+      ab.add(des);
+      
+      JTextField txtdescripcion = new JTextField();
+      txtdescripcion.setBounds(135,150,200,30);
+      ab.add(txtdescripcion);
+      
+      JLabel tem = new JLabel("Temas");
+      tem.setBounds(30,180,100,30);
+      ab.add(tem);
+      
+      JTextField txttemas = new JTextField();
+      txttemas.setBounds(135,180,200,30);
+      ab.add(txttemas);
+      
+      JLabel fr = new JLabel("Frecuencia");
+      fr.setBounds(425,60,100,30);
+      ab.add(fr);
+      
+      JTextField txtfrecuencia = new JTextField();
+      txtfrecuencia.setBounds(500,60,200,30);
+      ab.add(txtfrecuencia);
+      
+      JLabel ej = new JLabel("Ejemplares");
+      ej.setBounds(425,90,100,30);
+      ab.add(ej);
+      
+      JTextField txtejemplares = new JTextField();
+      txtejemplares.setBounds(500,90,200,30);
+      ab.add(txtejemplares);
+      
+      JLabel cop = new JLabel("Copias");
+      cop.setBounds(425,150,100,30);
+      ab.add(cop);
+      
+      JTextField txtcopias = new JTextField();
+      txtcopias.setBounds(500,150,200,30);
+      ab.add(txtcopias);
+      
+      JLabel ar = new JLabel("Area");
+      ar.setBounds(425,120,100,30);
+      ab.add(ar);
+      
+      JTextField txtarea = new JTextField();
+      txtarea.setBounds(500,120,200,30);
+      ab.add(txtarea);
+      
+      JLabel dis = new JLabel("Disponibles");
+      dis.setBounds(425,180,100,30);
+      ab.add(dis);
+      
+      JTextField txtdisponibles = new JTextField();
+      txtdisponibles.setBounds(500,180,200,30);
+      ab.add(txtdisponibles);
+      
+      JButton btncr= new JButton("Actualizar");
+      btncr.setBounds(225,270,100,30);
+      ab.add(btncr);
+       
+      JButton btncan= new JButton("Cancelar");
+      btncan.setBounds(400,270,100,30);
+      ab.add(btncan);
+      
+      JButton btbuscar= new JButton("Buscar");
+      btbuscar.setBounds(400,30,100,30);
+      ab.add(btbuscar);
+      
+      JTextField txtbu = new JTextField();
+      txtbu.setBounds(500,30,100,30);
+      ab.add(txtbu);
+      
+               txttitulo.setEnabled(false);
+               txtarea.setEnabled(false);
+               txtfrecuencia.setEnabled(false);
+               txtejemplares.setEnabled(false);
+      
+       ActionListener ev= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+           int a = boxt.getSelectedIndex();
+           System.out.println(a);
+           
+           if(a==0){
+               txtautor.setEnabled(true);
+               txttitulo.setEnabled(false);
+               txtedicion.setEnabled(true);
+               txtdescripcion.setEnabled(true);
+               txttemas.setEnabled(true);
+               txtfrecuencia.setEnabled(true);
+               txtcopias.setEnabled(true);
+               txtarea.setEnabled(false);
+               txtfrecuencia.setEnabled(false);
+               txtejemplares.setEnabled(false);
+               
+               
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+           }
+           if(a==1){
+               txtautor.setEnabled(true);
+               txttitulo.setEnabled(false);
+               txtedicion.setEnabled(true);
+               txtdescripcion.setEnabled(true);
+               txttemas.setEnabled(true);
+               txtfrecuencia.setEnabled(true);
+               txtcopias.setEnabled(true);
+               txtarea.setEnabled(false);
+               txtfrecuencia.setEnabled(true);
+               txtejemplares.setEnabled(true);
+               
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+           }if(a==2){
+               txtautor.setEnabled(true);
+               txttitulo.setEnabled(false);
+               txtedicion.setEnabled(true);
+               txtdescripcion.setEnabled(true);
+               txttemas.setEnabled(true);
+               txtfrecuencia.setEnabled(true);
+               txtcopias.setEnabled(true);
+               txtarea.setEnabled(true);
+               txtfrecuencia.setEnabled(false);
+               txtejemplares.setEnabled(false);
+               
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtfrecuencia.setText(null);
+               txtejemplares.setText(null);
+           }
+          }
+      };
+      boxt.addActionListener(ev);
+      
+      
+       ActionListener btnc= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             ab.dispose();
+             admin();
+          }
+      };
+      btncan.addActionListener(btnc);
+      ab.setVisible(true);
+   }
+   
+   
+    void cargamasiva(){
+        
+    }
  
  
  
