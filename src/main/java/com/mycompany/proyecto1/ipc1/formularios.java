@@ -454,6 +454,15 @@ public class formularios {
         btnelimarb.setBounds(200, 130, 90, 30);
         bli.add(btnelimarb);
         
+        ActionListener btnel= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             eliminarbiblio();
+             admi.dispose();
+          }
+      };
+      btnelimarb.addActionListener(btnel);
+        
        
         
          admi.setVisible(true);
@@ -1191,7 +1200,7 @@ public void BuscarDatos(String id){
 
                 if(bibliografia.crearBibliografiaIndividual()){
                     JOptionPane.showMessageDialog(null, "Bibliografia creada correctamente", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    txtautor.setText(null);
+                txtautor.setText(null);
                txttitulo.setText(null);
                txtedicion.setText(null);
                txtdescripcion.setText(null);
@@ -1199,7 +1208,7 @@ public void BuscarDatos(String id){
                txtfrecuencia.setText(null);
                txtcopias.setText(null);
                txtarea.setText(null);
-               txtfrecuencia.setText(null);
+               txtdisponibles.setText(null);
                txtejemplares.setText(null);
                 System.out.println(bibliografia);//comprobaciones en consola
                 }
@@ -1231,7 +1240,7 @@ public void BuscarDatos(String id){
    
    
    void actualizarbibliografia(){
-        JFrame ab = new JFrame("carga Individual");
+        JFrame ab = new JFrame("Actualizar Bibliografia");
         ab.setSize(800,500);
         ab.setLocationRelativeTo(null);
         ab.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1347,6 +1356,68 @@ public void BuscarDatos(String id){
       txtbu.setBounds(500,30,100,30);
       ab.add(txtbu);
       
+      
+      ActionListener btncre= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+            //campos
+            String tipo = String.valueOf(boxt.getSelectedIndex());
+            String autor = txtautor.getText();
+            String titulo = txttitulo.getText();
+            String edicion = txtedicion.getText();
+            String descripcion = txtdescripcion.getText();
+            String temas = txttemas.getText();
+            String frecuencia = txtfrecuencia.getText();
+            String ejemplares = txtejemplares.getText();
+            String area = txtarea.getText();
+            String copias = txtcopias.getText();
+            String disponibles = txtdisponibles.getText();
+
+            if (titulo.equals("") || disponibles.equals("") ) {
+                JOptionPane.showMessageDialog(null, "No deje el titulo ni los disponibles vacio", "Error", JOptionPane.WARNING_MESSAGE);
+            }else{
+
+                String[] temasFormateados = temas.split(",");
+                Bibliografia.actualizarBibliografia(tipo, autor, titulo, edicion, descripcion,temasFormateados,frecuencia,ejemplares,area,copias,disponibles);
+                if(Bibliografia.actualizarBibliografia(tipo, autor, titulo, edicion, descripcion,temasFormateados,frecuencia,ejemplares,area,copias,disponibles)){
+                    JOptionPane.showMessageDialog(null, "Bibliografia Actualizada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(null, "no se pudo modificar", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+          }
+      };
+      btncr.addActionListener(btncre);
+      
+          ActionListener vu= new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                 String[] datosBusqueda = Bibliografia.buscarBibliografia(txtbu.getText());
+
+            if (datosBusqueda != null) {
+
+                boxt.setSelectedIndex(Integer.parseInt(datosBusqueda[0].replace(" ","")));
+                txtautor.setText(datosBusqueda[1]);
+                txttitulo.setText(datosBusqueda[2]);
+                txtdescripcion.setText(datosBusqueda[3]);
+                txtedicion.setText(datosBusqueda[4]);
+                txttemas.setText(datosBusqueda[5]);
+                txtfrecuencia.setText(datosBusqueda[6]);
+                txtejemplares.setText(datosBusqueda[7]);
+                txtarea.setText(datosBusqueda[8]);
+                txtcopias.setText(datosBusqueda[9]);
+                txtdisponibles.setText(datosBusqueda[10]);
+
+            }else{
+                JOptionPane.showMessageDialog(null, "No existe registro", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            }
+          
+      };
+      btbuscar.addActionListener(vu);
+      
+      
+      
                txttitulo.setEnabled(false);
                txtarea.setEnabled(false);
                txtfrecuencia.setEnabled(false);
@@ -1449,6 +1520,202 @@ public void BuscarDatos(String id){
     }
  
  
+    
+    void eliminarbiblio(){
+        JFrame ab = new JFrame("Eliminar Bibliografia");
+        ab.setSize(800,500);
+        ab.setLocationRelativeTo(null);
+        ab.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ab.setLayout(null);
+      
+      JLabel tipo= new JLabel();
+      tipo.setText("Tipo");
+      tipo.setBounds(30,30,100,30);
+      ab.add(tipo);
+      
+      JComboBox boxt = new JComboBox();
+      boxt.setBounds(135,30,100,30);
+      boxt.addItem("Libro");
+      boxt.addItem("Revista");
+      boxt.addItem("Tesis");
+      ab.add(boxt);
+      
+     
+      
+      JLabel autor = new JLabel("Autor");
+      autor.setBounds(30,60,100,30);
+      ab.add(autor);
+      
+      JTextField txtautor = new JTextField();
+      txtautor.setBounds(135,60,200,30);
+      ab.add(txtautor);
+      
+      JLabel ti = new JLabel("Titulo");
+      ti.setBounds(30,90,100,30);
+      ab.add(ti);
+      
+      JTextField txttitulo = new JTextField();
+      txttitulo.setBounds(135,90,200,30);
+      ab.add(txttitulo);
+      
+      JLabel edi = new JLabel("Edicion");
+      edi.setBounds(30,120,100,30);
+      ab.add(edi);
+      
+      JTextField txtedicion = new JTextField();
+      txtedicion.setBounds(135,120,200,30);
+      ab.add(txtedicion);
+      
+      JLabel des = new JLabel("Descripcion");
+      des.setBounds(30,150,100,30);
+      ab.add(des);
+      
+      JTextField txtdescripcion = new JTextField();
+      txtdescripcion.setBounds(135,150,200,30);
+      ab.add(txtdescripcion);
+      
+      JLabel tem = new JLabel("Temas");
+      tem.setBounds(30,180,100,30);
+      ab.add(tem);
+      
+      JTextField txttemas = new JTextField();
+      txttemas.setBounds(135,180,200,30);
+      ab.add(txttemas);
+      
+      JLabel fr = new JLabel("Frecuencia");
+      fr.setBounds(425,60,100,30);
+      ab.add(fr);
+      
+      JTextField txtfrecuencia = new JTextField();
+      txtfrecuencia.setBounds(500,60,200,30);
+      ab.add(txtfrecuencia);
+      
+      JLabel ej = new JLabel("Ejemplares");
+      ej.setBounds(425,90,100,30);
+      ab.add(ej);
+      
+      JTextField txtejemplares = new JTextField();
+      txtejemplares.setBounds(500,90,200,30);
+      ab.add(txtejemplares);
+      
+      JLabel cop = new JLabel("Copias");
+      cop.setBounds(425,150,100,30);
+      ab.add(cop);
+      
+      JTextField txtcopias = new JTextField();
+      txtcopias.setBounds(500,150,200,30);
+      ab.add(txtcopias);
+      
+      JLabel ar = new JLabel("Area");
+      ar.setBounds(425,120,100,30);
+      ab.add(ar);
+      
+      JTextField txtarea = new JTextField();
+      txtarea.setBounds(500,120,200,30);
+      ab.add(txtarea);
+      
+      JLabel dis = new JLabel("Disponibles");
+      dis.setBounds(425,180,100,30);
+      ab.add(dis);
+      
+      JTextField txtdisponibles = new JTextField();
+      txtdisponibles.setBounds(500,180,200,30);
+      ab.add(txtdisponibles);
+      
+      JButton btncr= new JButton("Eliminar");
+      btncr.setBounds(225,270,100,30);
+      ab.add(btncr);
+       
+      JButton btncan= new JButton("Cancelar");
+      btncan.setBounds(400,270,100,30);
+      ab.add(btncan);
+      
+      JButton btbuscar= new JButton("Buscar");
+      btbuscar.setBounds(400,30,100,30);
+      ab.add(btbuscar);
+      
+      JTextField txtbu = new JTextField();
+      txtbu.setBounds(500,30,100,30);
+      ab.add(txtbu);
+               
+               boxt.setEnabled(false);
+               txtautor.setEnabled(false);
+               txttitulo.setEnabled(false);
+               txtedicion.setEnabled(false);
+               txtdescripcion.setEnabled(false);
+               txttemas.setEnabled(false);
+               txtfrecuencia.setEnabled(false);
+               txtcopias.setEnabled(false);
+               txtarea.setEnabled(false);
+               txtdisponibles.setEnabled(false);
+               txtejemplares.setEnabled(false);
+      
+          ActionListener btnel= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+            String titulo = txttitulo.getText();
+            Bibliografia.eliminarBibliografia(titulo);
+            JOptionPane.showMessageDialog(null, "Bibliografia eliminada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            txtbu.setText(null);
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtdisponibles.setText(null);
+               txtejemplares.setText(null);
+          }
+      };
+      btncr.addActionListener(btnel);
+               
+               
+         ActionListener btnb= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+           
+                 String[] datosBusqueda = Bibliografia.buscarBibliografia(txtbu.getText());
+
+            if (datosBusqueda != null) {
+                boxt.setSelectedIndex(Integer.parseInt(datosBusqueda[0].replace(" ","")));
+                txtautor.setText(datosBusqueda[1]);
+                txttitulo.setText(datosBusqueda[2]);
+                txtdescripcion.setText(datosBusqueda[3]);
+                txtedicion.setText(datosBusqueda[4]);
+                txttemas.setText(datosBusqueda[5]);
+                txtfrecuencia.setText(datosBusqueda[6]);
+                txtejemplares.setText(datosBusqueda[7]);
+                txtarea.setText(datosBusqueda[8]);
+                txtcopias.setText(datosBusqueda[9]);
+                txtdisponibles.setText(datosBusqueda[10]);
+
+            }else{
+                JOptionPane.showMessageDialog(null, "No existe registro", "Aviso", JOptionPane.WARNING_MESSAGE);
+               
+            }
+
+              
+          }
+      };
+      btbuscar.addActionListener(btnb);       
+               
+               
+          ActionListener btnc= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             ab.dispose();
+             admin();
+          }
+      };
+      btncan.addActionListener(btnc);
+               
+               
+               
+               
+      ab.setVisible(true);
+    }
  
         
     }
