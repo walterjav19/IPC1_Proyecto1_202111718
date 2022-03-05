@@ -4,6 +4,7 @@ package com.mycompany.proyecto1.ipc1;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -284,6 +285,15 @@ public class formularios {
         usuarios.setBorderPainted(false);
         reportes.add(usuarios);
         
+        ActionListener re= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             reporteusu();
+             admi.dispose();
+          }
+      };
+      usuarios.addActionListener(re);
+        
         JButton biblio= new JButton("Bibliografias");
         biblio.setBackground(new Color(64,207,255));
         biblio.setForeground(new Color(255,255,255));
@@ -312,6 +322,8 @@ public class formularios {
         u.setForeground(new Color(255,255,255));
         u.setHorizontalAlignment(SwingConstants.LEFT);
         uz.add(u);
+        
+        
         
         JButton btncrearu = new JButton("Crear");
         btncrearu.setBackground(new Color(64,207,255));
@@ -409,13 +421,12 @@ public class formularios {
           public void actionPerformed(ActionEvent e) {
              
              String[] opciones = {"Crear Masiva", "Crear individual"};
-             int x = JOptionPane.showOptionDialog(null, "¿Forma de carga?","Selecciona una opcion",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+             int x = JOptionPane.showOptionDialog(null, "Forma de carga","Elige una opcion",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
              
              if (x ==0) {
                 cargamasiva();
                 admi.dispose();
             }else if (x == 1) {
-                //carga individual
                 cargaindividual();
                 admi.dispose();
             }
@@ -429,6 +440,15 @@ public class formularios {
         btnverb.setBorderPainted(false);
         btnverb.setBounds(200, 40, 90, 30);
         bli.add(btnverb);
+        
+        ActionListener btnver= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             mostrarbibliografias();
+             admi.dispose();
+          }
+      };
+      btnverb.addActionListener(btnver);
         
         JButton btnmodificarb = new JButton("Modificar");
         btnmodificarb.setBackground(new Color(64,207,255));
@@ -1381,6 +1401,17 @@ public void BuscarDatos(String id){
                 Bibliografia.actualizarBibliografia(tipo, autor, titulo, edicion, descripcion,temasFormateados,frecuencia,ejemplares,area,copias,disponibles);
                 if(Bibliografia.actualizarBibliografia(tipo, autor, titulo, edicion, descripcion,temasFormateados,frecuencia,ejemplares,area,copias,disponibles)){
                     JOptionPane.showMessageDialog(null, "Bibliografia Actualizada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+               txtbu.setText(null);
+               txtautor.setText(null);
+               txttitulo.setText(null);
+               txtedicion.setText(null);
+               txtdescripcion.setText(null);
+               txttemas.setText(null);
+               txtfrecuencia.setText(null);
+               txtcopias.setText(null);
+               txtarea.setText(null);
+               txtdisponibles.setText(null);
+               txtejemplares.setText(null);
                 }else{
                     JOptionPane.showMessageDialog(null, "no se pudo modificar", "Error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -1398,8 +1429,8 @@ public void BuscarDatos(String id){
                 boxt.setSelectedIndex(Integer.parseInt(datosBusqueda[0].replace(" ","")));
                 txtautor.setText(datosBusqueda[1]);
                 txttitulo.setText(datosBusqueda[2]);
-                txtdescripcion.setText(datosBusqueda[3]);
-                txtedicion.setText(datosBusqueda[4]);
+                txtedicion.setText(datosBusqueda[3]);
+                txtdescripcion.setText(datosBusqueda[4]);
                 txttemas.setText(datosBusqueda[5]);
                 txtfrecuencia.setText(datosBusqueda[6]);
                 txtejemplares.setText(datosBusqueda[7]);
@@ -1656,7 +1687,7 @@ public void BuscarDatos(String id){
             String titulo = txttitulo.getText();
             Bibliografia.eliminarBibliografia(titulo);
             JOptionPane.showMessageDialog(null, "Bibliografia eliminada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            txtbu.setText(null);
+               txtbu.setText(null);
                txtautor.setText(null);
                txttitulo.setText(null);
                txtedicion.setText(null);
@@ -1682,8 +1713,8 @@ public void BuscarDatos(String id){
                 boxt.setSelectedIndex(Integer.parseInt(datosBusqueda[0].replace(" ","")));
                 txtautor.setText(datosBusqueda[1]);
                 txttitulo.setText(datosBusqueda[2]);
-                txtdescripcion.setText(datosBusqueda[3]);
-                txtedicion.setText(datosBusqueda[4]);
+                txtedicion.setText(datosBusqueda[3]);
+                txtdescripcion.setText(datosBusqueda[4]);
                 txttemas.setText(datosBusqueda[5]);
                 txtfrecuencia.setText(datosBusqueda[6]);
                 txtejemplares.setText(datosBusqueda[7]);
@@ -1717,6 +1748,104 @@ public void BuscarDatos(String id){
       ab.setVisible(true);
     }
  
+        void mostrarbibliografias(){
+     JFrame framem=new JFrame("Mostrar Bibliografias"); 
+     framem.setLayout(null);
+     framem.setResizable(false);
+     framem.setSize(1225,600);
+     framem.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     framem.setLocationRelativeTo(null);
+     
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(500,350,100,30);
+     framem.add(btnRegresar);
+     
+      ActionListener REG= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             framem.dispose();
+             admin();
+            
+          }
+      };
+      btnRegresar.addActionListener(REG);
+     
+     DefaultTableModel mtabla = new DefaultTableModel(); 
+     
+     mtabla.addColumn("Tipo");
+     mtabla.addColumn("Autor");
+     mtabla.addColumn("Titulo");
+     mtabla.addColumn("Edicion");
+     mtabla.addColumn("Descripcion");
+     mtabla.addColumn("Temas");
+     mtabla.addColumn("Frecuencia");
+     mtabla.addColumn("Ejemplares");
+     mtabla.addColumn("Area");
+     mtabla.addColumn("Copias");
+     mtabla.addColumn("Disponibles");
+    
+     
+     JTable tabla1 = new JTable();
+    
+     tabla1.setBorder(new LineBorder(Color.red));
+     if (Bibliografia.datosBibiliografia()[0][0]!=null) {
+            for (String[] dato : Bibliografia.datosBibiliografia()) {
+                String tipo = "";
+                if (dato[0].equals("0")) {
+                    tipo = "Libro";
+                } else if (dato[0].equals("1")) {
+                    tipo = "Revista";
+                } else if (dato[0].equals("2")) {
+                    tipo = "Tesis";
+                }
+                mtabla.addRow(new Object[]{tipo, dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7], dato[8], dato[9], dato[10]});
+            }
+        }
+     JScrollPane scroll= new JScrollPane(tabla1);
+     scroll.setBounds(0,0,1200,300);
+     tabla1.setModel(mtabla);
+     framem.add(scroll);
+     
+     
+     framem.setVisible(true);
+        }
+        
+        
+        void reporteusu(){
+     JFrame framer=new JFrame("Reporte usuarios"); 
+     framer.setLayout(null);
+     framer.setResizable(false);
+     framer.setSize(1225,600);
+     framer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     framer.setLocationRelativeTo(null);
+     
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(525,500,100,30);
+     framer.add(btnRegresar);
+     
+     TextArea repu =new TextArea();
+     repo reporte = new repo();
+     
+     repu.setText(reporte.reporteUsuarios());
+     
+     JScrollPane scroll= new JScrollPane(repu);
+     scroll.setBounds(0,0,1200,500);
+     framer.add(scroll);
+             
+      ActionListener REG= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             framer.dispose();
+             admin();
+          }
+      };
+      btnRegresar.addActionListener(REG);
+      
+      
+      framer.setVisible(true);   
+        }
+      
+     
         
     }
     

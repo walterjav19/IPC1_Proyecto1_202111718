@@ -21,7 +21,7 @@ public class Bibliografia {
     private String copias;
     private String disponibles;
 
-    public Bibliografia(String tipo, String autor, String titulo, String descripcion, String edicion, String[] temas, String frecuenciaActual, String ejemplares,String area,String copias, String disponibles){
+    public Bibliografia(String tipo, String autor, String titulo, String edicion, String descripcion, String[] temas, String frecuenciaActual, String ejemplares,String area,String copias, String disponibles){
         this.tipo = tipo;
         this.autor = autor.trim();
         this.titulo = titulo.trim(); 
@@ -119,9 +119,8 @@ public class Bibliografia {
         return datosFormateados;
     }
 
-    public static boolean actualizarBibliografia(String tipo, String autor, String titulo, String descripcion, String edicion, String[] temas, String frecuenciaActual, String ejemplares,String area,String copias, String disponibles){
+    public static boolean actualizarBibliografia(String tipo, String autor, String titulo, String edicion, String descripcion, String[] temas, String frecuenciaActual, String ejemplares,String area,String copias, String disponibles){
             if (existeBibliografia(titulo)) {
-                //validación
                 String nuevosDatos="";
                 for (int i = 0; i < datosBibiliografia().length; i++) {
                     if (!(datosBibiliografia()[i][2].equalsIgnoreCase(titulo))) {
@@ -131,7 +130,7 @@ public class Bibliografia {
                         nuevosDatos=nuevosDatos+"\n";
                     }else{
                         String temasFormateados = formatearTemas(temas);
-                        nuevosDatos=nuevosDatos+tipo +";"+autor+";"+titulo+";"+descripcion+";"+edicion+";"+temasFormateados+";"+frecuenciaActual+";"+ejemplares+";"+area+";"+copias+";"+disponibles+"\n";
+                        nuevosDatos=nuevosDatos+tipo +";"+autor+";"+titulo+";"+edicion+";"+descripcion+";"+temasFormateados+";"+frecuenciaActual+";"+ejemplares+";"+area+";"+copias+";"+disponibles+"\n";
                     }
                 }
 
