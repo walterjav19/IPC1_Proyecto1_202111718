@@ -36,11 +36,10 @@ public class formularios {
     JButton btnabout,btnlogin,logout;
     ImageIcon logo,banner;    
     
-    //datos usuarios
+  
 
     
     public void fprincipal(){
-        
         principal= new JFrame();
         principal.setLayout(null);
         principal.setResizable(false);
@@ -80,6 +79,7 @@ public class formularios {
            
             public void actionPerformed(ActionEvent e) {
               principal.dispose();
+              prestamos();
               login();
             }
             
@@ -181,6 +181,7 @@ public class formularios {
                         JOptionPane.showMessageDialog(null, respuesta[1], "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
                     }
                     if (respuesta[3].equals("3") || respuesta[3].equals("2")) {
+                        prestamos();
                         login.dispose();
                         JOptionPane.showMessageDialog(null, respuesta[1], "Bienvenido", JOptionPane.INFORMATION_MESSAGE);
 
@@ -1979,11 +1980,135 @@ public void BuscarDatos(String id){
       
       framer.setVisible(true);   
      }
-        
+     
+
+   
+      String[] datosUsuario;
+
+    void PanelUsuario(String id){
+        datosUsuario = Usuario.buscarUsuario(id);
+        JLabel labelNombreUsuario = new JLabel("Nombre de usuario: " + datosUsuario[1]);
+    }
+     
      void prestamos(){
-         
+        JFrame usuar=new JFrame("Usuarios normales");
+        usuar.setSize(1200,540);
+        usuar.getContentPane().setBackground(new Color(96, 96, 96 ));
+        usuar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        usuar.setResizable(false);
+        usuar.setLocationRelativeTo(null);
+        usuar.setLayout(null);
+        
+        ImageIcon escudo=new ImageIcon(new ImageIcon("C:\\Users\\walte\\OneDrive\\Documentos\\NetBeansProjects\\proyecto1-IPC1\\src\\main\\java\\imagenes\\escudo.png").getImage().getScaledInstance(175, 175, Image.SCALE_DEFAULT));
+        JLabel es=new JLabel(escudo);
+        es.setBounds(20,20,175,175);
+        usuar.add(es);
+        
+     DefaultTableModel mtabla = new DefaultTableModel();   
+     mtabla.addColumn("Tipo");
+     mtabla.addColumn("Autor");
+     mtabla.addColumn("Titulo");
+     mtabla.addColumn("Edicion");
+     mtabla.addColumn("Descripcion");
+     mtabla.addColumn("Temas");
+     mtabla.addColumn("Frecuencia");
+     mtabla.addColumn("Ejemplares");
+     mtabla.addColumn("Area");
+     mtabla.addColumn("Copias");
+     mtabla.addColumn("Disponibles");
+     JTable tabla1 = new JTable();
+     tabla1.setEnabled(false);
+     tabla1.setBorder(new LineBorder(Color.red));
+     if (Bibliografia.datosBibiliografia()[0][0]!=null) {
+            for (String[] dato : Bibliografia.datosBibiliografia()) {
+                String tipo = "";
+                if (dato[0].equals("0")) {
+                    tipo = "Libro";
+                } else if (dato[0].equals("1")) {
+                    tipo = "Revista";
+                } else if (dato[0].equals("2")) {
+                    tipo = "Tesis";
+                }
+                mtabla.addRow(new Object[]{tipo, dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7], dato[8], dato[9], dato[10]});
+            }
+        }
+     JScrollPane scroll= new JScrollPane(tabla1);
+     scroll.setBounds(0,250,1200,200);
+     tabla1.setModel(mtabla);
+     usuar.add(scroll);
+     
+     
+        
+        JLabel nou = new JLabel();
+        nou.setText("Usuario: ");
+        nou.setVerticalTextPosition(JLabel.TOP);
+        nou.setFont(new Font("MV Boli",Font.PLAIN,20));
+        nou.setBounds(800,80,100,30);
+        nou.setForeground(new Color(255, 255, 255));
+        usuar.add(nou);
+        
+        JButton logout=new JButton("Logout");
+        logout.setBackground(Color.red);
+        logout.setForeground(new Color(255,255,255));
+        logout.setBorderPainted(false);
+        logout.setBounds(1000,40,100,30);
+        usuar.add(logout);
+        
+                
+        JButton prest=new JButton("Ver Prestamos");
+        prest.setBounds(1000,80,175,30);
+        prest.setBackground(new Color(64,207,255));
+        prest.setForeground(new Color(255,255,255));
+        prest.setBorderPainted(false);
+        usuar.add(prest);
+        
+        JLabel dat = new JLabel();
+        dat.setText("Titulo: ");
+        dat.setVerticalTextPosition(JLabel.TOP);
+        dat.setFont(new Font("MV Boli",Font.PLAIN,20));
+        dat.setBounds(0,450,100,30);
+        dat.setForeground(new Color(255, 255, 255));
+        usuar.add(dat);
+        
+        
+        JButton presta=new JButton("Prestar");
+        presta.setBounds(500,450,175,30);
+        presta.setBackground(new Color(64,207,255));
+        presta.setForeground(new Color(255,255,255));
+        presta.setBorderPainted(false);
+        usuar.add(presta);
+        
+        JButton busca=new JButton("Buscar");
+        busca.setBounds(0,200,175,30);
+        busca.setBackground(new Color(64,207,255));
+        busca.setForeground(new Color(255,255,255));
+        busca.setBorderPainted(false);
+        usuar.add(busca);
+        
+        JTextField txtbus=new JTextField();
+        txtbus.setBounds(200, 200, 200, 30);
+        usuar.add(txtbus);
+        
+         ActionListener escuchador= new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+                int opcion=JOptionPane.showConfirmDialog(null, "Esta seguro que quiere cerrar sesion");
+                if(opcion==0){
+                    login();
+                    usuar.dispose();
+                }
+            }
+            
+        };
+        
+        logout.addActionListener(escuchador);
+        
+        usuar.setVisible(true);
      }
      
+     void mostrarprestamos(){
+    
+     }
      
     }
     
