@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -301,6 +300,14 @@ public class formularios {
         biblio.setBounds(140,40,110,30);
         reportes.add(biblio);
         
+         ActionListener ru= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             reportebiblio();
+             admi.dispose();
+          }
+      };
+      biblio.addActionListener(ru);
         
         JButton pre= new JButton("Prestamos");
         pre.setBackground(new Color(64,207,255));
@@ -308,6 +315,15 @@ public class formularios {
         pre.setBorderPainted(false);
         pre.setBounds(260,40,110,30);
         reportes.add(pre);
+        
+          ActionListener rpre= new ActionListener() {
+         
+          public void actionPerformed(ActionEvent e) {
+             reporteprest();
+             admi.dispose();
+          }
+      };
+      pre.addActionListener(rpre);
         
         JPanel uz= new JPanel();
         uz.setLayout(null);
@@ -982,7 +998,7 @@ public void BuscarDatos(String id){
     
      
      JTable tabla1 = new JTable();
-    
+     tabla1.setEnabled(false);
      tabla1.setBorder(new LineBorder(Color.blue));
      for (String[] dato: Usuario.datosUsuario()) {
             String tipoRol = "Administrador";
@@ -1547,7 +1563,55 @@ public void BuscarDatos(String id){
    
    
     void cargamasiva(){
-        
+     JFrame framer=new JFrame("Carga Masiva"); 
+     framer.setLayout(null);
+     framer.setResizable(false);
+     framer.setSize(1225,600);
+     framer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     framer.setLocationRelativeTo(null);
+     
+     
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(450,500,100,30);
+     framer.add(btnRegresar);
+     
+     JButton btnc = new JButton("Subir");
+     btnc.setBounds(600,500,100,30);
+     framer.add(btnc);
+     
+     TextArea repu =new TextArea();
+  
+     
+     JScrollPane scroll= new JScrollPane(repu);
+     scroll.setBounds(0,0,1200,500);
+     framer.add(scroll);
+    
+      ActionListener s= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+               if (Bibliografia.crearBibliografiaMasiva(repu.getText())){
+                JOptionPane.showMessageDialog(null, "Bibliografia creada", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+                repu.setText(null);
+
+            }else{
+                JOptionPane.showMessageDialog(null, "Formato de ingreso incorrecto", "Error",JOptionPane.ERROR_MESSAGE);
+            }
+          }
+      };
+      btnc.addActionListener(s);
+    
+     
+      ActionListener REG= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             framer.dispose();
+             admin();
+          }
+      };
+      btnRegresar.addActionListener(REG);
+      
+      
+      framer.setVisible(true);   
     }
  
  
@@ -1748,7 +1812,7 @@ public void BuscarDatos(String id){
       ab.setVisible(true);
     }
  
-        void mostrarbibliografias(){
+     void mostrarbibliografias(){
      JFrame framem=new JFrame("Mostrar Bibliografias"); 
      framem.setLayout(null);
      framem.setResizable(false);
@@ -1786,7 +1850,7 @@ public void BuscarDatos(String id){
     
      
      JTable tabla1 = new JTable();
-    
+     tabla1.setEnabled(false);
      tabla1.setBorder(new LineBorder(Color.red));
      if (Bibliografia.datosBibiliografia()[0][0]!=null) {
             for (String[] dato : Bibliografia.datosBibiliografia()) {
@@ -1811,8 +1875,44 @@ public void BuscarDatos(String id){
         }
         
         
-        void reporteusu(){
+     void reporteusu(){
      JFrame framer=new JFrame("Reporte usuarios"); 
+     framer.setLayout(null);
+     framer.setResizable(false);
+     framer.setSize(1225,600);
+     framer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     framer.setLocationRelativeTo(null);
+     
+     
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(525,500,100,30);
+     framer.add(btnRegresar);
+     
+     TextArea repu =new TextArea();
+     repo reporte = new repo();
+     
+     repu.setText(reporte.reporteUsuarios());
+     
+     JScrollPane scroll= new JScrollPane(repu);
+     scroll.setBounds(0,0,1200,500);
+     framer.add(scroll);
+   
+     
+      ActionListener REG= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             framer.dispose();
+             admin();
+          }
+      };
+      btnRegresar.addActionListener(REG);
+      
+      
+      framer.setVisible(true);   
+        }
+      
+     void reportebiblio(){
+     JFrame framer=new JFrame("Reporte Bibliografias"); 
      framer.setLayout(null);
      framer.setResizable(false);
      framer.setSize(1225,600);
@@ -1826,7 +1926,7 @@ public void BuscarDatos(String id){
      TextArea repu =new TextArea();
      repo reporte = new repo();
      
-     repu.setText(reporte.reporteUsuarios());
+     repu.setText(reporte.reporteBibliografias());
      
      JScrollPane scroll= new JScrollPane(repu);
      scroll.setBounds(0,0,1200,500);
@@ -1844,9 +1944,47 @@ public void BuscarDatos(String id){
       
       framer.setVisible(true);   
         }
-      
      
+     
+     void reporteprest(){
+     JFrame framer=new JFrame("Reporte Prestamos"); 
+     framer.setLayout(null);
+     framer.setResizable(false);
+     framer.setSize(1225,600);
+     framer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     framer.setLocationRelativeTo(null);
+     
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(525,500,100,30);
+     framer.add(btnRegresar);
+     
+     TextArea repu =new TextArea();
+     repo reporte = new repo();
+     
+     repu.setText(reporte.reportePrestamos());
+     
+     JScrollPane scroll= new JScrollPane(repu);
+     scroll.setBounds(0,0,1200,500);
+     framer.add(scroll);
+             
+      ActionListener REG= new ActionListener() { 
+          
+          public void actionPerformed(ActionEvent e) {
+             framer.dispose();
+             admin();
+          }
+      };
+      btnRegresar.addActionListener(REG);
+      
+      
+      framer.setVisible(true);   
+     }
         
+     void prestamos(){
+         
+     }
+     
+     
     }
     
     
