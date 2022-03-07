@@ -5,7 +5,7 @@ public class Usuario {
 
     public static String datos = "";
 
-    private final static int NUMERO_CAMPOS=6;
+    private final static int CAMPOS=6;
 
     //parametros para el constructor
     private String id;
@@ -31,7 +31,6 @@ public class Usuario {
         //verificacion en consola
         if (!existeUsuario(id)) {
             datos = datos + this.id +";"+this.nombre+";"+this.apellido+";"+this.nombreUsuario+";"+this.rol+";"+this.contrasena+"\n";
-            System.out.println("Usuario: "+ this.id +";"+this.nombre+";"+this.apellido+";"+this.nombreUsuario+";"+this.rol+";"+this.contrasena+"\n");
             return true;
         }else{
             return false;
@@ -41,25 +40,24 @@ public class Usuario {
     public static String[][] datosUsuario(){
         String[] arregloDatos = datos.split("\n");
 
-        String [][] datosFormateados = new String[arregloDatos.length][6];
+        String [][] datosnuevos = new String[arregloDatos.length][6];
 
         if (datos.length()>0) {
             for (int i = 0; i < arregloDatos.length; i++) {
-                for (int j = 0; j < NUMERO_CAMPOS; j++) {
-                    datosFormateados[i][j]=arregloDatos[i].split(";")[j];
+                for (int j = 0; j < CAMPOS; j++) {
+                    datosnuevos[i][j]=arregloDatos[i].split(";")[j];
                 }
             }
         }
-        return datosFormateados;
+        return datosnuevos;
     }
 
     public static boolean actualizarUsuario(String id, String nombre, String apellido, String nombreUsuario, String rol, String contrasena){
             if (existeUsuario(id)) {
-                //validación
                 String nuevosDatos="";
                 for (int i = 0; i < datosUsuario().length; i++) {
                     if (!(datosUsuario()[i][0].equals(id))) {
-                        for (int j = 0; j < NUMERO_CAMPOS; j++) {
+                        for (int j = 0; j < CAMPOS; j++) {
                             nuevosDatos=nuevosDatos+ datosUsuario()[i][j] +";";
                         }
                         nuevosDatos=nuevosDatos+"\n";
@@ -78,12 +76,12 @@ public class Usuario {
 
     public static void eliminarUsuario(String id){
 
-        //validación
+        
         String nuevosDatos="";
         for (int i = 0; i < datosUsuario().length; i++) {
             if (!(datosUsuario()[i][0].equals(id))) {
 
-                for (int j = 0; j < NUMERO_CAMPOS; j++) {
+                for (int j = 0; j < CAMPOS; j++) {
                     nuevosDatos=nuevosDatos+ datosUsuario()[i][j] +";";
                 }
                 nuevosDatos=nuevosDatos+"\n";
@@ -94,15 +92,15 @@ public class Usuario {
 
     public static String[] buscarUsuario(String id) {
 
-        String [] datosUsuarioBusqueda = null;
+        String [] Busqueda = null;
 
         for (int i = 0; i < datosUsuario().length; i++) {
             if ((datosUsuario()[i][0].equals(id))) {
-                datosUsuarioBusqueda = datosUsuario()[i];
+                Busqueda = datosUsuario()[i];
             }
         }
 
-        return datosUsuarioBusqueda;
+        return Busqueda;
 
     }
 
@@ -110,13 +108,13 @@ public class Usuario {
 
     
         if (datos.length()>0) {
-            boolean existe =false;
+            boolean hay =false;
             for (int i = 0; i < datosUsuario().length; i++) {
                 if ((datosUsuario()[i][0].equals(id))) {
-                    existe=true;
+                    hay=true;
                 }
             }
-            return existe;
+            return hay;
         }else{
             return false;
         }

@@ -47,7 +47,6 @@ public class formularios {
         principal.setSize(1200,600);
         principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         principal.setTitle("BIBLIOTECA FACULTAD DE INGENIERIA USAC");
-        
         logo=new ImageIcon("C:\\Users\\walte\\OneDrive\\Documentos\\NetBeansProjects\\proyecto1-IPC1\\src\\main\\java\\imagenes\\usac.jpg");
         etiqueta=new JLabel();
         etiqueta.setIcon(logo);
@@ -2093,7 +2092,7 @@ public void BuscarDatos(String id){
         nou.setText("Usuario: "+txtusu.getText());
         nou.setVerticalTextPosition(JLabel.TOP);
         nou.setFont(new Font("MV Boli",Font.PLAIN,20));
-        nou.setBounds(800,80,300,30);
+        nou.setBounds(700,80,300,30);
         nou.setForeground(new Color(255, 255, 255));
         usuar.add(nou);
         
@@ -2116,6 +2115,7 @@ public void BuscarDatos(String id){
             
             public void actionPerformed(ActionEvent e) {
                mostrarprestamos();
+               usuar.dispose();
             }
             
         };

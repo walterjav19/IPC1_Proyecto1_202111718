@@ -121,6 +121,7 @@ public class Bibliografia {
 
     public static boolean actualizarBibliografia(String tipo, String autor, String titulo, String edicion, String descripcion, String[] temas, String frecuenciaActual, String ejemplares,String area,String copias, String disponibles){
             if (existeBibliografia(titulo)) {
+
                 String nuevosDatos="";
                 for (int i = 0; i < datosBibiliografia().length; i++) {
                     if (!(datosBibiliografia()[i][2].equalsIgnoreCase(titulo))) {

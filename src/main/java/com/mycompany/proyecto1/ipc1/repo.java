@@ -27,36 +27,35 @@ public class repo {
 
         String [] encabezados = {"ID del usuario", "Nombre", "Apellido", "Nombre de usuario", "Rol", "Bibliografias prestadas"};
         String[][] datosUsuarios = Usuario.datosUsuario();
-        String[][] datosReporteFormateados = new String[datosUsuarios.length][6];
+        String[][] datosnuevos = new String[datosUsuarios.length][6];
 
         for (int i = 0; i < datosUsuarios.length; i++) {
-            datosReporteFormateados[i][0]=datosUsuarios[i][0];
-            datosReporteFormateados[i][1]=datosUsuarios[i][1];
-            datosReporteFormateados[i][2]=datosUsuarios[i][2];
-            datosReporteFormateados[i][3]=datosUsuarios[i][3];
+            datosnuevos[i][0]=datosUsuarios[i][0];
+            datosnuevos[i][1]=datosUsuarios[i][1];
+            datosnuevos[i][2]=datosUsuarios[i][2];
+            datosnuevos[i][3]=datosUsuarios[i][3];
             String numeroRol =datosUsuarios[i][4];
 
             if (numeroRol.equals("1")) {
-                datosReporteFormateados[i][4]="Administrador";
+                datosnuevos[i][4]="Administrador";
             }else if (numeroRol.equals("2")) {
-                datosReporteFormateados[i][4]="Estudiante";
+                datosnuevos[i][4]="Estudiante";
             }else if (numeroRol.equals("3")) {
-                datosReporteFormateados[i][4]="Catedratico";
+                datosnuevos[i][4]="Catedratico";
             }
 
-            //Contar bibliografias
             String bibliografiasPrestadas = "0";
-            String[][] datosPrestamoPorUsuario = prestamo.listarPrestamoNoDevueltos(datosUsuarios[i][0]);
+            String[][] datosPrestamoPorUsuario = prestamo.PrestamoNoDevueltos(datosUsuarios[i][0]);
 
             if (datosPrestamoPorUsuario != null) {
                 if (datosPrestamoPorUsuario[0][0] != null) {
                     bibliografiasPrestadas = datosPrestamoPorUsuario.length +"";
                 }
             }
-            datosReporteFormateados[i][5]=bibliografiasPrestadas;
+            datosnuevos[i][5]=bibliografiasPrestadas;
         }
 
-        String tabla = crearTabla(encabezados,datosReporteFormateados);
+        String tabla = crearTabla(encabezados,datosnuevos);
 
         reporte =reporte+tabla+pie;
 
@@ -65,10 +64,10 @@ public class repo {
 
      public String reporteBibliografias() {
 
-        String reporte="";
+        String repo="";
 
         Encabezado("Reporte de Bibliografias");
-        reporte = reporte + encabezado;
+        repo = repo + encabezado;
 
         String [] encabezados = {"Tema","Bibliografias asociadas"};
         String[][] datosBibliografia = Bibliografia.datosBibiliografia();
@@ -78,7 +77,7 @@ public class repo {
             return "";
         }
 
-        String temasSeparadosPorComas = "";
+        String temasSeparados = "";
         for (int i = 0; i < datosBibliografia.length; i++) {
             String[] temasBibliografiaIndividual = datosBibliografia[i][5].split(",");
 
@@ -87,10 +86,10 @@ public class repo {
                 String temaIndividual = temasBibliografiaIndividual[j];
 
                 if (i == 0 && j ==0) {
-                    temasSeparadosPorComas+= temaIndividual + " ;";
+                    temasSeparados+= temaIndividual + " ;";
                 }else{
                     int verificaciones = 1;
-                    String [] temasVerificados = temasSeparadosPorComas.split(";");
+                    String [] temasVerificados = temasSeparados.split(";");
                     boolean noAparecio =true;
                     for (int k = 0; k < temasVerificados.length; k++) {
 
@@ -98,7 +97,7 @@ public class repo {
                             noAparecio = false;
                         }
                         if (verificaciones == temasVerificados.length && noAparecio) {
-                            temasSeparadosPorComas+= " " + temaIndividual + " ;";
+                            temasSeparados+= " " + temaIndividual + " ;";
                         }
 
                         verificaciones++;
@@ -107,9 +106,9 @@ public class repo {
             }
         }
 
-        temasSeparadosPorComas = temasSeparadosPorComas.substring(0, temasSeparadosPorComas.length()-1);
+        temasSeparados = temasSeparados.substring(0, temasSeparados.length()-1);
 
-        String [] temas = temasSeparadosPorComas.split(";");
+        String [] temas = temasSeparados.split(";");
         String[][] datosReporteFormateados = new String[temas.length][2];
 
         for (int i = 0; i < datosReporteFormateados.length; i++) {
@@ -133,8 +132,8 @@ public class repo {
 
         String tabla = crearTabla(encabezados,datosReporteFormateados);
 
-        reporte =reporte+tabla+pie;
-        return reporte;
+        repo =repo+tabla+pie;
+        return repo;
 
     }
     
