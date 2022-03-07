@@ -10,4 +10,26 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+    
+    <!-- COMIENZO - Crear un ejecutable JAR -->
+    <build>
+        <plugins>
+            <plugin>
+                <version>3.0.2</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.mycompany.proyecto1.ipc1.principal</mainClass>
+                            <classpathPrefix>lib</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <!-- FIN - Crear un ejecutable JAR -->
+    
 </project>
