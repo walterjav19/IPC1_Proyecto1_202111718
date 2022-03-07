@@ -22,7 +22,7 @@ public class prestamo {
     public prestamo(String titulo, String idUsuario){
         DateTimeFormatter formatoDeFecha = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
-        numeroPrestamo+=1;
+        numeroPrestamo=numeroPrestamo+1;
         this.id = (numeroPrestamo) +"";
         this.titulo = titulo;
         this.fecha = formatoDeFecha.format(LocalDateTime.now());
@@ -99,7 +99,7 @@ public class prestamo {
                 }
             }
 
-            //regresar tipo ?
+     
             return datosPrestamoBusqueda;
         }else{
             return null;

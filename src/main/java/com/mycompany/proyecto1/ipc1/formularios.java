@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class formularios {
     
-    //objetos swing y awt
+    // swing y awt
     JLabel vision,etiqueta,etiban;
     JFrame principal,login,admi;
     
@@ -79,7 +79,6 @@ public class formularios {
            
             public void actionPerformed(ActionEvent e) {
               principal.dispose();
-              prestamos();
               login();
             }
             
@@ -118,7 +117,7 @@ public class formularios {
     
     
     
-    
+    JTextField txtusu;
     
     public void login(){
         
@@ -136,7 +135,7 @@ public class formularios {
         usuario.setBounds(135, 200, 100, 30);
         login.add(usuario);
         
-        JTextField txtusu= new JTextField();
+        txtusu= new JTextField();
         txtusu.setBackground(new Color(106, 128, 138));
         txtusu.setForeground(new Color(255, 255, 255));
         txtusu.setBounds(220,200,100,30);
@@ -263,8 +262,8 @@ public class formularios {
         logout.addActionListener(escuchador);
         
         JPanel  reportes=new JPanel();
-        reportes.setLayout(null);
         reportes.setBackground(new Color(72, 103, 117));
+        reportes.setLayout(null);
         reportes.setBorder(BorderFactory.createTitledBorder("                    "));
         reportes.setBounds(700, 100, 400, 90);
         admi.add(reportes);
@@ -1962,7 +1961,7 @@ public void BuscarDatos(String id){
      TextArea repu =new TextArea();
      repo reporte = new repo();
      
-     repu.setText(reporte.reportePrestamos());
+     
      
      JScrollPane scroll= new JScrollPane(repu);
      scroll.setBounds(0,0,1200,500);
@@ -1983,13 +1982,65 @@ public void BuscarDatos(String id){
      
 
    
-      String[] datosUsuario;
-
-    void PanelUsuario(String id){
-        datosUsuario = Usuario.buscarUsuario(id);
-        JLabel labelNombreUsuario = new JLabel("Nombre de usuario: " + datosUsuario[1]);
-    }
+   
      
+    JTextField txtbus;
+    String[] datosUsuario;
+        void ListarPrestamos(String id){
+            datosUsuario = Usuario.buscarUsuario(id);
+        }
+    
+    void model(DefaultTableModel modeloTabla,String [][] datosCargar){
+        if (datosCargar != null) {
+            if (datosCargar[0][0] != null) {
+
+                for (String[] dato : datosCargar) {
+                    String tipo = "";
+                    if (dato[0].equals("0")) {
+                        tipo = "Libro";
+                    } else if (dato[0].equals("1")) {
+                        tipo = "Revista";
+                    } else if (dato[0].equals("2")) {
+                        tipo = "Tesis";
+                    }
+                    modeloTabla.addRow(new Object[]{tipo, dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7], dato[8], dato[9], dato[10]});
+                }
+            }
+        }else {
+            JOptionPane.showMessageDialog(null, "No existe", "error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    JTable tablabi;
+    void cargar() {
+        tablabi.setModel(new DefaultTableModel());
+        DefaultTableModel modeloTabla = new DefaultTableModel();
+
+        modeloTabla.setRowCount(0);
+        modeloTabla.addColumn("Tipo");
+        modeloTabla.addColumn("Autor");
+        modeloTabla.addColumn("Titulo");
+        modeloTabla.addColumn("Descripcion");
+        modeloTabla.addColumn("Edicion");
+        modeloTabla.addColumn("Temas");
+        modeloTabla.addColumn("Frecuencia Actual");
+        modeloTabla.addColumn("Ejemplares");
+        modeloTabla.addColumn("Area");
+        modeloTabla.addColumn("Copias");
+        modeloTabla.addColumn("Disponibles");
+
+        if (!txtbus.getText().equals("")) {
+            model(modeloTabla,Bibliografia.buscarCoincidenciasBibliografia(txtbus.getText()));
+        }else{
+            model(modeloTabla,Bibliografia.datosBibiliografia());
+        }
+
+        tablabi.setModel(modeloTabla);
+        
+    }
+    
+   
+    
      void prestamos(){
         JFrame usuar=new JFrame("Usuarios normales");
         usuar.setSize(1200,540);
@@ -2016,9 +2067,8 @@ public void BuscarDatos(String id){
      mtabla.addColumn("Area");
      mtabla.addColumn("Copias");
      mtabla.addColumn("Disponibles");
-     JTable tabla1 = new JTable();
-     tabla1.setEnabled(false);
-     tabla1.setBorder(new LineBorder(Color.red));
+     tablabi = new JTable();
+     tablabi.setBorder(new LineBorder(Color.red));
      if (Bibliografia.datosBibiliografia()[0][0]!=null) {
             for (String[] dato : Bibliografia.datosBibiliografia()) {
                 String tipo = "";
@@ -2032,18 +2082,18 @@ public void BuscarDatos(String id){
                 mtabla.addRow(new Object[]{tipo, dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7], dato[8], dato[9], dato[10]});
             }
         }
-     JScrollPane scroll= new JScrollPane(tabla1);
+     JScrollPane scroll= new JScrollPane(tablabi);
      scroll.setBounds(0,250,1200,200);
-     tabla1.setModel(mtabla);
+     tablabi.setModel(mtabla);
      usuar.add(scroll);
      
-     
+    
         
         JLabel nou = new JLabel();
-        nou.setText("Usuario: ");
+        nou.setText("Usuario: "+txtusu.getText());
         nou.setVerticalTextPosition(JLabel.TOP);
         nou.setFont(new Font("MV Boli",Font.PLAIN,20));
-        nou.setBounds(800,80,100,30);
+        nou.setBounds(800,80,300,30);
         nou.setForeground(new Color(255, 255, 255));
         usuar.add(nou);
         
@@ -2062,14 +2112,15 @@ public void BuscarDatos(String id){
         prest.setBorderPainted(false);
         usuar.add(prest);
         
-        JLabel dat = new JLabel();
-        dat.setText("Titulo: ");
-        dat.setVerticalTextPosition(JLabel.TOP);
-        dat.setFont(new Font("MV Boli",Font.PLAIN,20));
-        dat.setBounds(0,450,100,30);
-        dat.setForeground(new Color(255, 255, 255));
-        usuar.add(dat);
+         ActionListener v= new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+               mostrarprestamos();
+            }
+            
+        };
         
+        prest.addActionListener(v);
         
         JButton presta=new JButton("Prestar");
         presta.setBounds(500,450,175,30);
@@ -2078,6 +2129,17 @@ public void BuscarDatos(String id){
         presta.setBorderPainted(false);
         usuar.add(presta);
         
+        ActionListener pre= new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(null,"Prestamo creado");
+
+            }
+            
+        };
+        
+        presta.addActionListener(pre);
+        
         JButton busca=new JButton("Buscar");
         busca.setBounds(0,200,175,30);
         busca.setBackground(new Color(64,207,255));
@@ -2085,7 +2147,17 @@ public void BuscarDatos(String id){
         busca.setBorderPainted(false);
         usuar.add(busca);
         
-        JTextField txtbus=new JTextField();
+        ActionListener bu= new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+                    cargar();
+            }
+            
+        };
+        
+        busca.addActionListener(bu);
+        
+        txtbus=new JTextField();
         txtbus.setBounds(200, 200, 200, 30);
         usuar.add(txtbus);
         
@@ -2107,7 +2179,49 @@ public void BuscarDatos(String id){
      }
      
      void mostrarprestamos(){
+     JFrame framemp=new JFrame("Mostrar Prestamos"); 
+     framemp.setLayout(null);
+     framemp.setResizable(false);
+     framemp.setSize(1225,600);
+     framemp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     framemp.setLocationRelativeTo(null);
+     
+     JButton btnRegresar = new JButton("Regresar");
+     btnRegresar.setBounds(500,350,100,30);
+     framemp.add(btnRegresar);
+     
+     ActionListener r= new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+                    prestamos();
+                    framemp.dispose();
+            }
+            
+        };
+        
+        btnRegresar.addActionListener(r);
+     
+        
+        DefaultTableModel mtabla = new DefaultTableModel(); 
+     
+        mtabla.addColumn("No");
+        mtabla.addColumn("Titulo");
+        mtabla.addColumn("Fecha");
+        mtabla.addColumn("Devuelto");
+   
     
+     
+     JTable tabla1 = new JTable();
+     tabla1.setEnabled(false);
+     tabla1.setBorder(new LineBorder(Color.red));
+     
+     JScrollPane scroll= new JScrollPane(tabla1);
+     scroll.setBounds(0,0,1200,300);
+     tabla1.setModel(mtabla);
+     framemp.add(scroll);
+       
+        
+        framemp.setVisible(true);
      }
      
     }

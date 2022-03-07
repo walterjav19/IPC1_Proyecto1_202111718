@@ -140,57 +140,7 @@ public class repo {
     
     
     
-    public String reportePrestamos(){
-        String reporte="";
-
-        Encabezado("Reporte de prestamos");
-        reporte = reporte + encabezado;
-
-        String tabla ="";
-
-        String [] encabezados = {"ID del prestamo","ID del usuario", "Titulo", "Tipo", "Fecha", "Devuelto"};
-
-        String[][] datosPrestamo = prestamo.datosPrestamo();
-        String[][] datosFormateados = new String[datosPrestamo.length][6];
-
-
-        int contadorAux = 0;
-        for (int i = datosFormateados.length-1; i >= 0; i--) {
-            datosFormateados[contadorAux][0]=datosPrestamo[i][0];
-            datosFormateados[contadorAux][1]=datosPrestamo[i][4];
-            datosFormateados[contadorAux][2]=datosPrestamo[i][1];
-
-            if (Bibliografia.buscarBibliografia(datosPrestamo[i][1]) == null) {
-                return "";
-            }
-
-            String numeroTipo = Bibliografia.buscarBibliografia(datosPrestamo[i][1])[0];
-
-            if (numeroTipo.equals("0")) {
-                datosFormateados[i][3]="Libro";
-            }else if (numeroTipo.equals("1")) {
-                datosFormateados[i][3]="Revista";
-            }else{
-                datosFormateados[i][3]="Tesis";
-            }
-
-            datosFormateados[contadorAux][4]=datosPrestamo[i][2];
-
-            String devuelto = "No";
-            if (datosPrestamo[i][3].equals("1")) {
-                devuelto="Si";
-            }
-            datosFormateados[contadorAux][5]=devuelto;
-
-            contadorAux++;
-        }
-
-        tabla= crearTabla(encabezados,datosFormateados);
-
-        reporte =reporte+tabla+pie;
-        return reporte;
-    }
-
+    
    
 
         private String crearTabla(String [] encabezados, String[][] datosCuerpo){
