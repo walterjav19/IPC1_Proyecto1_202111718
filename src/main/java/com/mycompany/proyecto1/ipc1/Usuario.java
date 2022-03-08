@@ -26,9 +26,23 @@ public class Usuario {
         crearUsuario();
     }
 
+    
+        private static boolean existeUsuario(String id){//verificamos si hay usuario
+        if (datos.length()>0) {
+            boolean existe =false;
+            for (int i = 0; i < datosUsuario().length; i++) {
+                if ((datosUsuario()[i][0].equals(id))) {
+                    existe=true;
+                }
+            }
+            return existe;
+        }else{
+            return false;
+        }
+    }
+        
+        
     public boolean crearUsuario(){
-
-        //verificacion en consola
         if (!existeUsuario(id)) {
             datos = datos + this.id +";"+this.nombre+";"+this.apellido+";"+this.nombreUsuario+";"+this.rol+";"+this.contrasena+"\n";
             return true;
@@ -38,7 +52,7 @@ public class Usuario {
     }
 
     public static String[][] datosUsuario(){
-        String[] arregloDatos = datos.split("\n");
+        String[] arregloDatos = datos.split("\n");//salto de linea
 
         String [][] datosnuevos = new String[arregloDatos.length][6];
 
@@ -104,21 +118,7 @@ public class Usuario {
 
     }
 
-    private static boolean existeUsuario(String id){//verificamos si hay 
 
-    
-        if (datos.length()>0) {
-            boolean hay =false;
-            for (int i = 0; i < datosUsuario().length; i++) {
-                if ((datosUsuario()[i][0].equals(id))) {
-                    hay=true;
-                }
-            }
-            return hay;
-        }else{
-            return false;
-        }
-    }
 
     public static String[] login(String nombre, String contraseña){
         String [] mensaje = new String[4];

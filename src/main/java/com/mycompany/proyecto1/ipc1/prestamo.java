@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class prestamo {
      
     public static String datos = "";
-    public static int numeroPrestamo =-1;
+    public static int numeroPrestamo =0;
 
     private final static int CAMPOS=5;
 
@@ -62,16 +62,16 @@ public class prestamo {
 
 
         if (datosDisponibles>0) {
-            String [][] datosPrestamoBusqueda = new String [datosDisponibles][4];
-            int contadorAux = 0;
+            String [][] busqueda = new String [datosDisponibles][4];
+            int contador = 0;
             for (int i = 0; i < datosPrestamo().length; i++) {
                 if ((datosPrestamo()[i][4].equals(idUsuario)) && (datosPrestamo()[i][3].equals("0"))) {
-                    datosPrestamoBusqueda[contadorAux]=datosPrestamo()[i];
+                    busqueda[contador]=datosPrestamo()[i];
                 }
             }
 
      
-            return datosPrestamoBusqueda;
+            return busqueda;
         }else{
             return null;
         }

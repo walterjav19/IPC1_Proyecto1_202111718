@@ -41,18 +41,18 @@ public class repo {
             }else if (numeroRol.equals("2")) {
                 datosnuevos[i][4]="Estudiante";
             }else if (numeroRol.equals("3")) {
-                datosnuevos[i][4]="Catedratico";
+                datosnuevos[i][4]="Profesor";
             }
 
-            String bibliografiasPrestadas = "0";
+            String Prestadas = "0";
             String[][] datosPrestamoPorUsuario = prestamo.PrestamoNoDevueltos(datosUsuarios[i][0]);
 
             if (datosPrestamoPorUsuario != null) {
                 if (datosPrestamoPorUsuario[0][0] != null) {
-                    bibliografiasPrestadas = datosPrestamoPorUsuario.length +"";
+                    Prestadas = datosPrestamoPorUsuario.length +"";
                 }
             }
-            datosnuevos[i][5]=bibliografiasPrestadas;
+            datosnuevos[i][5]=Prestadas;
         }
 
         String tabla = crearTabla(encabezados,datosnuevos);
@@ -109,10 +109,10 @@ public class repo {
         temasSeparados = temasSeparados.substring(0, temasSeparados.length()-1);
 
         String [] temas = temasSeparados.split(";");
-        String[][] datosReporteFormateados = new String[temas.length][2];
+        String[][] datosReporten = new String[temas.length][2];
 
-        for (int i = 0; i < datosReporteFormateados.length; i++) {
-            datosReporteFormateados[i][0] =temas[i].trim();
+        for (int i = 0; i < datosReporten.length; i++) {
+            datosReporten[i][0] =temas[i].trim();
 
             int bibliografiasRegistradas = 0;
             for (int j = 0; j < datosBibliografia.length; j++) {
@@ -126,11 +126,11 @@ public class repo {
             }
 
 
-            datosReporteFormateados[i][1] =bibliografiasRegistradas+"";
+            datosReporten[i][1] =bibliografiasRegistradas+"";
 
         }
 
-        String tabla = crearTabla(encabezados,datosReporteFormateados);
+        String tabla = crearTabla(encabezados,datosReporten);
 
         repo =repo+tabla+pie;
         return repo;
@@ -138,15 +138,11 @@ public class repo {
     }
     
     
-    
-    
-   
-
         private String crearTabla(String [] encabezados, String[][] datosCuerpo){
         String tabla ="\n<table border='1'>";
 
 
-        //Encabezados
+        //Encabezado
         String encabezadoTabla = "\n\t\t<tr>";
         for (String encabezado:encabezados) {
             encabezadoTabla = encabezadoTabla + "\n\t\t\t<th>"+encabezado+"</th>";
